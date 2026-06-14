@@ -7,7 +7,9 @@ services:
     runtime: node
     plan: free
     # Build shared types → web (Vite) → server (tsc), in that order.
-    buildCommand: npm install && npm run build
+    # --include=dev is required: NODE_ENV=production (below) otherwise makes npm
+    # skip devDependencies (typescript, vite, @types/*), breaking the build.
+    buildCommand: npm install --include=dev && npm run build
     # Express serves web/dist + /api. Render injects PORT.
     startCommand: npm start
     healthCheckPath: /api/health
