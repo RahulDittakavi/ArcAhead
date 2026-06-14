@@ -1,0 +1,252 @@
+/* Design tokens + global CSS — ported verbatim from ArcAhead.html :root block. */
+:root {
+  /* surfaces — dark mode first */
+  --bg: #08090c;
+  --bg-2: #0c0e13;
+  --surface: #121419;
+  --surface-2: #181b22;
+  --surface-3: #20242e;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.12);
+
+  /* text */
+  --text: #f3f4f7;
+  --text-2: #a4aab8;
+  --text-3: #6b7280;
+  --text-4: #444b58;
+
+  /* accents */
+  --orange: oklch(0.74 0.175 50);
+  --orange-hi: oklch(0.8 0.165 62);
+  --orange-deep: oklch(0.62 0.17 38);
+  --blue: oklch(0.72 0.12 248);
+  --blue-deep: oklch(0.6 0.13 252);
+  --green: oklch(0.78 0.15 158);
+
+  --orange-glow: color-mix(in oklab, var(--orange) 45%, transparent);
+  --orange-faint: color-mix(in oklab, var(--orange) 12%, transparent);
+  --blue-faint: oklch(0.72 0.12 248 / 0.14);
+
+  --r-sm: 10px;
+  --r: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.85);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --maxw: 1240px;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Sora", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+/* ---- light surface variant ---- */
+body[data-surface="light"] {
+  --bg: #f4f1ec;
+  --bg-2: #ece8e1;
+  --surface: #ffffff;
+  --surface-2: #fbf9f5;
+  --surface-3: #f1ede6;
+  --line: rgba(20, 16, 10, 0.09);
+  --line-2: rgba(20, 16, 10, 0.15);
+  --text: #15130f;
+  --text-2: #5a554c;
+  --text-3: #8a8478;
+  --text-4: #b4aea1;
+  --shadow: 0 26px 60px -32px rgba(60, 45, 25, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+::selection {
+  background: var(--orange-faint);
+  color: var(--text);
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 20px;
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-4);
+}
+
+/* ---- buttons ---- */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 999px;
+  transition: transform 0.25s var(--ease), box-shadow 0.35s var(--ease), background 0.25s;
+}
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+.btn-lg {
+  font-size: 17px;
+  padding: 16px 28px;
+}
+.btn-md {
+  font-size: 15px;
+  padding: 12px 22px;
+}
+.btn-sm {
+  font-size: 13.5px;
+  padding: 9px 16px;
+}
+.btn-primary {
+  color: #1a0c03;
+  background: linear-gradient(180deg, var(--orange-hi), var(--orange));
+  box-shadow: 0 10px 30px -8px var(--orange-glow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.btn-primary:hover {
+  box-shadow: 0 16px 44px -10px var(--orange-glow), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  color: var(--text);
+  background-color: var(--surface-2);
+  border: 1px solid var(--line-2);
+}
+.btn-ghost:hover {
+  background: var(--surface-3);
+  border-color: var(--text-4);
+  transform: translateY(-1px);
+}
+
+/* ---- utility chips ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  color: var(--text-2);
+  background-color: var(--surface-2);
+  font-family: var(--font-body);
+}
+.mono {
+  font-family: var(--font-mono);
+}
+
+.fade-up {
+  animation: fadeUp 0.7s var(--ease) both;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}
+
+.cover-tag {
+  position: absolute;
+  bottom: 8px;
+  right: 9px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+}
+
+@keyframes ringpulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
+}
+
+/* episode range slider */
+.ep-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 99px;
+  outline: none;
+  background: linear-gradient(
+    90deg,
+    var(--orange) 0%,
+    var(--orange) var(--fill, 40%),
+    var(--surface-3) var(--fill, 40%)
+  );
+}
+.ep-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--orange-hi);
+  cursor: pointer;
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 12px var(--orange-glow);
+}
+.ep-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--orange-hi);
+  cursor: pointer;
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 12px var(--orange-glow);
+}
+
+.lnk {
+  cursor: pointer;
+}
+.lnk:hover {
+  color: var(--text);
+}
