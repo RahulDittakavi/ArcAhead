@@ -8,3 +8,9 @@ build/
 shared/dist/
 server/dist/
 web/dist/
+
+# verification artifacts (screenshots from test runs)
+.verify/
+
+# image backups (not served/used by the app)
+web/public/uploads/*-original.*

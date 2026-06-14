@@ -1,29 +1,21 @@
 import { Router } from "express";
-import { prisma, resolveEp, SERIES_ID } from "../db.js";
+import { resolveEp } from "../db.js";
+import { kb } from "../kb/index.js";
 import { toCharacterDto } from "../spoiler/filter.js";
-import type { CharacterRecord } from "@arcahead/shared";
+import { getPresenter } from "../present/presenter.js";
 
 export const charactersRouter = Router();
 
-// GET /api/characters?ep=&q=  → search, spoiler-filtered bios
-// Note: we return characters even when not-yet-introduced (so the UI can show
-// the "you haven't crossed paths yet" sealed card), but the bio payload itself
-// is stripped server-side by toCharacterDto.
+// GET /api/characters?ep=&q=  → search, spoiler-filtered bios.
+// Not-yet-introduced characters are still returned (so the UI can show the
+// "you haven't crossed paths yet" sealed card), but toCharacterDto strips the
+// bio payload server-side.
 charactersRouter.get("/", async (req, res, next) => {
   try {
     const ep = await resolveEp(req.query.ep);
-    const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
-
-    const chars = (await prisma.character.findMany({
-      where: {
-        seriesId: SERIES_ID,
-        ...(q ? { name: { contains: q, mode: "insensitive" } } : {}),
-      },
-      include: { locked: true },
-      orderBy: { epaffirst: "asc" },
-    })) as unknown as CharacterRecord[];
-
-    res.json(chars.map((c) => toCharacterDto(c, ep)));
+    const q = typeof req.query.q === "string" ? req.query.q.trim().toLowerCase() : "";
+    const list = kb.characters().filter((c) => (q ? c.name.toLowerCase().includes(q) : true));
+    res.json(list.map((c) => toCharacterDto(c, ep)));
   } catch (e) {
     next(e);
   }
@@ -33,12 +25,10 @@ charactersRouter.get("/", async (req, res, next) => {
 charactersRouter.get("/:id", async (req, res, next) => {
   try {
     const ep = await resolveEp(req.query.ep);
-    const char = (await prisma.character.findUnique({
-      where: { id: req.params.id },
-      include: { locked: true },
-    })) as unknown as CharacterRecord | null;
+    const char = kb.character(req.params.id);
     if (!char) return res.status(404).json({ error: "character not found" });
-    res.json(toCharacterDto(char, ep));
+    // filter first, then (optionally) reformat — presenter only ever sees the DTO
+    res.json(getPresenter().character(toCharacterDto(char, ep)));
   } catch (e) {
     next(e);
   }

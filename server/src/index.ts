@@ -1,11 +1,14 @@
 import express from "express";
 import cors from "cors";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 import { journeyRouter } from "./routes/journey.js";
 import { arcsRouter } from "./routes/arcs.js";
 import { charactersRouter } from "./routes/characters.js";
 import { reactionsRouter } from "./routes/reactions.js";
-import { meRouter } from "./routes/me.js";
 import { seriesRouter } from "./routes/series.js";
+import { milestonesRouter } from "./routes/milestones.js";
 
 const app = express();
 app.use(cors());
@@ -17,7 +20,17 @@ app.use("/api/journey", journeyRouter);
 app.use("/api/arcs", arcsRouter);
 app.use("/api/characters", charactersRouter);
 app.use("/api/reactions", reactionsRouter);
-app.use("/api/me", meRouter);
+app.use("/api/milestones", milestonesRouter);
+
+// ---- serve the built SPA (production single-service deploy) ----
+// In dev, Vite serves the frontend and proxies /api here, so this is skipped.
+const webDist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../web/dist");
+if (existsSync(webDist)) {
+  app.use(express.static(webDist));
+  // SPA fallback: any non-/api route returns index.html (client-side router).
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(webDist, "index.html")));
+  console.log(`Serving SPA from ${webDist}`);
+}
 
 // Centralized error handler.
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

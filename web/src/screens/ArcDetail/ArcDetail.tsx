@@ -72,6 +72,14 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
               {full.status === "done" && <span className="chip" style={{ color: "var(--green)", borderColor: "oklch(0.78 0.15 158 / 0.3)" }}><Icon name="map-pinned" size={12} /> Island discovered</span>}
               {full.status === "current" && <span className="chip" style={{ color: "var(--orange-hi)", borderColor: "var(--orange)" }}><Icon name="sailboat" size={12} /> Currently ashore</span>}
               {isFuture && <span className="chip"><Icon name="cloud-fog" size={12} /> Still in the fog</span>}
+              {!isFuture && full.kind && (
+                <span className="chip" style={full.kind === "canon"
+                  ? { color: "var(--green)", borderColor: "oklch(0.78 0.15 158 / 0.3)" }
+                  : { color: "var(--blue)", borderColor: "var(--line-2)" }}>
+                  <Icon name={full.kind === "canon" ? "anchor" : "sparkles"} size={12} />
+                  {full.kind === "canon" ? "Canon arc" : full.kind === "filler" ? "Filler arc" : "Canon + filler"}
+                </span>
+              )}
             </div>
             <h1 style={{ fontSize: "clamp(34px,5vw,60px)", marginBottom: 8, filter: isFuture ? "blur(8px)" : "none", userSelect: isFuture ? "none" : "auto" }}>{full.island}</h1>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--text-3)", marginBottom: 16 }}>{isFuture ? "An island still under cloud" : full.name + " arc"}</div>

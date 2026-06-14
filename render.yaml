@@ -1,0 +1,18 @@
+# Render Blueprint — one web service that builds the SPA + API and serves both.
+# DB-less: no database to provision. Connect this repo in Render → "Blueprints"
+# and it provisions automatically.
+services:
+  - type: web
+    name: arcahead
+    runtime: node
+    plan: free
+    # Build shared types → web (Vite) → server (tsc), in that order.
+    buildCommand: npm install && npm run build
+    # Express serves web/dist + /api. Render injects PORT.
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"

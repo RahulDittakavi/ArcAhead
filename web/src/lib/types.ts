@@ -1,6 +1,7 @@
 // Re-export the shared API contract so screens import from one place.
 export type {
   ArcStatus,
+  ArcKind,
   ArcDto,
   JourneyDto,
   CharacterDto,
@@ -8,4 +9,9 @@ export type {
   ReactionDto,
   MeDto,
   SeriesRecord,
+  MilestoneStatus,
+  MilestoneDto,
+  MilestonesDto,
+  SagaRecord,
+  TimelineDto,
 } from "@arcahead/shared";

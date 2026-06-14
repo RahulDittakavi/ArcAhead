@@ -1,4 +1,4 @@
-import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, MeDto, SeriesRecord } from "./types";
+import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, SeriesRecord, MilestonesDto } from "./types";
 
 const BASE = "/api";
 
@@ -25,16 +25,7 @@ export const api = {
   reactions: (ep?: number, arc?: string) =>
     get<ReactionDto[]>(`/reactions?${epq(ep)}${arc ? `&arc=${encodeURIComponent(arc)}` : ""}`),
 
-  me: () => get<MeDto>(`/me`),
-  setEpisode: async (currentEp: number): Promise<MeDto> => {
-    const res = await fetch(`${BASE}/me`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ currentEp }),
-    });
-    if (!res.ok) throw new Error(`PATCH /me → ${res.status}`);
-    return res.json() as Promise<MeDto>;
-  },
+  milestones: (ep?: number) => get<MilestonesDto>(`/milestones?${epq(ep)}`),
 };
 
 /** Client-side mirrors of the prototype display helpers (presentation only). */

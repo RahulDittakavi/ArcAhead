@@ -14,6 +14,7 @@ export function Dashboard() {
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const { data: reactions } = useApi(() => api.reactions(ep), [ep]);
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
+  const { data: ms } = useApi(() => api.milestones(ep), [ep]);
 
   if (!journey || !journey.current) {
     return (
@@ -114,6 +115,66 @@ export function Dashboard() {
             </div>
           </div>
         </Card>
+
+        {/* journey milestones */}
+        {ms && (
+          <Card pad={26} style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <h3 style={{ fontSize: 19, display: "flex", alignItems: "center", gap: 9 }}>
+                <Icon name="flag" size={19} color="var(--orange-hi)" /> Journey milestones
+              </h3>
+              <span className="chip">
+                <Icon name="check-check" size={12} color="var(--green)" /> {ms.milestones.filter((m) => m.status === "reached").length} reached
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 6 }}>
+              {ms.milestones.map((m) => {
+                const reached = m.status === "reached";
+                const current = m.status === "current";
+                return (
+                  <div
+                    key={m.id}
+                    style={{
+                      flexShrink: 0,
+                      width: 210,
+                      borderRadius: "var(--r)",
+                      padding: 16,
+                      border: current ? "1.5px solid var(--orange)" : "1px solid var(--line)",
+                      background: current ? "var(--orange-faint)" : "var(--surface-2)",
+                      opacity: m.status === "future" ? 0.7 : 1,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                      <Icon
+                        name={reached ? "check-check" : current ? "sailboat" : "lock"}
+                        size={15}
+                        color={reached ? "var(--green)" : current ? "var(--orange-hi)" : "var(--text-4)"}
+                      />
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em", color: "var(--text-3)" }}>
+                        {reached ? "REACHED" : current ? "IN PROGRESS" : `LOCKED · EP ${m.unlockEp}`}
+                      </span>
+                    </div>
+                    {m.status === "future" ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text-3)" }}>
+                        <Icon name="cloud-fog" size={16} />
+                        <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>A milestone awaits</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16, marginBottom: 6 }}>{m.title}</div>
+                        {reached && m.safeRecap && <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.5, marginBottom: 8 }}>{m.safeRecap}</p>}
+                        {current && <p style={{ fontSize: 12, color: "var(--text-3)", lineHeight: 1.5, marginBottom: 8 }}>Finish this stretch to unlock its recap.</p>}
+                        <span className="chip" style={{ fontSize: 11, color: reached ? "var(--orange-hi)" : "var(--text-3)", background: reached ? "var(--orange-faint)" : "var(--surface-3)" }}>
+                          <Icon name="star" size={11} color="var(--orange-hi)" /> {m.reward}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        )}
 
         {/* lower grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }}>

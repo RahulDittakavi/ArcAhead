@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { IMAGES } from "../lib/images";
 import { Icon } from "./Icon";
 
@@ -26,11 +26,20 @@ export function PlaceImg({
 }) {
   const meta = IMAGES[name] ?? ({} as (typeof IMAGES)[string]);
   const base: CSSProperties = { position: "relative", overflow: "hidden", borderRadius: radius, width: "100%", height: "100%", ...style };
+  const [failed, setFailed] = useState(false);
 
-  if (meta.src) {
+  // Show the real image once its src is set AND it loads. If the file is missing
+  // (src set but not yet dropped in), fall back to the labelled placeholder
+  // instead of a broken-image icon.
+  if (meta.src && !failed) {
     return (
       <div style={base}>
-        <img src={meta.src} alt={name} style={{ width: "100%", height: "100%", objectFit: fit, display: "block", ...imgStyle }} />
+        <img
+          src={meta.src}
+          alt={name}
+          onError={() => setFailed(true)}
+          style={{ width: "100%", height: "100%", objectFit: fit, display: "block", ...imgStyle }}
+        />
         {overlay}
         {children}
       </div>

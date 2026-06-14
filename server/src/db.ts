@@ -1,30 +1,20 @@
-import { PrismaClient } from "@prisma/client";
+import { kb } from "./kb/index.js";
 
-export const prisma = new PrismaClient();
+/* DB-less build: there is no persistence layer. The current episode lives in
+   the client's localStorage and is sent as ?ep= on every request. The server
+   stays stateless and does all spoiler filtering from the JSON knowledge base.
+   (Multi-user accounts + a real datastore come later — this is the single seam
+   where that would plug back in.) */
 
-export const SERIES_ID = "one-piece"; // single tracked title for this build
-export const DEMO_USER_EMAIL = process.env.DEMO_USER_EMAIL || "navigator@arcahead.app";
+export const SERIES_ID = kb.seriesId;
 
-/** Single-user model: resolve (or lazily create) the one demo user. */
-export async function getDemoUser() {
-  return prisma.user.upsert({
-    where: { email: DEMO_USER_EMAIL },
-    update: {},
-    create: { email: DEMO_USER_EMAIL },
-  });
-}
+const DEFAULT_EP = 381;
 
-/** Resolve the effective episode for a request: explicit ?ep= wins, otherwise
- *  fall back to the demo user's saved currentEp. Clamped to [1, series.episodes]. */
-export async function resolveEp(rawEp: unknown): Promise<number> {
-  const series = await prisma.series.findUnique({ where: { id: SERIES_ID } });
-  const max = series?.episodes ?? Number.MAX_SAFE_INTEGER;
-  let ep: number;
-  if (rawEp === undefined || rawEp === null || rawEp === "") {
-    ep = (await getDemoUser()).currentEp;
-  } else {
-    ep = Number(rawEp);
-    if (!Number.isFinite(ep)) ep = (await getDemoUser()).currentEp;
-  }
+/** Resolve the effective episode for a request from ?ep=, clamped to
+ *  [1, series.episodes]. Falls back to a sensible default if absent/invalid. */
+export function resolveEp(rawEp: unknown): number {
+  const max = kb.series().episodes;
+  let ep = Number(rawEp);
+  if (!Number.isFinite(ep)) ep = DEFAULT_EP;
   return Math.max(1, Math.min(max, Math.round(ep)));
 }

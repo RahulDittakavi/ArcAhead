@@ -11,6 +11,9 @@ import type {
   ArcStatus,
   CharacterRecord,
   CharacterDto,
+  MilestoneRecord,
+  MilestoneDto,
+  MilestoneStatus,
 } from "@arcahead/shared";
 import { hypeFor } from "./hype.js";
 
@@ -43,6 +46,7 @@ export function toArcDto(arc: ArcRecord, ep: number): ArcDto {
     moments: arc.moments,
     rating: arc.rating,
     banner: arc.banner,
+    kind: arc.kind, // safe to reveal for reached/current arcs ("is this filler?")
   };
 }
 
@@ -76,4 +80,22 @@ export function toCharacterDto(char: CharacterRecord, ep: number): CharacterDto 
       .sort((a, b) => a.unlockEp - b.unlockEp)
       .map((l) => ({ title: l.title, unlockEp: l.unlockEp, hint: l.hint })),
   };
+}
+
+export function milestoneStatus(ep: number, m: Pick<MilestoneRecord, "fromEp" | "toEp">): MilestoneStatus {
+  if (ep > m.toEp) return "reached";
+  if (ep >= m.fromEp) return "current"; // in the stretch but not finished
+  return "future";
+}
+
+/** Convert a milestone to a wire-safe DTO.
+ *  - reached: full payload (the recap is safe — you've passed the whole range).
+ *  - current: title + reward, recap WITHHELD (it would spoil the range's end).
+ *  - future: a sealed mystery placeholder — only the unlock episode. */
+export function toMilestoneDto(m: MilestoneRecord, ep: number): MilestoneDto {
+  const status = milestoneStatus(ep, m);
+  if (status === "future") return { id: m.id, status, unlockEp: m.fromEp };
+  const base: MilestoneDto = { id: m.id, status, title: m.title, reward: m.reward, fromEp: m.fromEp, toEp: m.toEp };
+  if (status === "reached") base.safeRecap = m.safeRecap;
+  return base;
 }

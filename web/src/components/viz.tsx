@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { Icon } from "./Icon";
 import { IMAGES } from "../lib/images";
 
@@ -48,11 +48,13 @@ export function CompassRose({ size = 120, opacity = 0.5, color = "var(--orange)"
 // ---------- Ship marker ----------
 export function ShipMarker({ size = 46 }: { size?: number }) {
   const meta = IMAGES.SHIP_PROGRESS_IMAGE ?? {};
-  if (meta.src) {
+  const [failed, setFailed] = useState(false);
+  if (meta.src && !failed) {
     return (
       <img
         src={meta.src}
         alt="SHIP_PROGRESS_IMAGE"
+        onError={() => setFailed(true)}
         style={{ width: size, height: "auto", display: "block", filter: "drop-shadow(0 6px 12px rgba(0,0,0,.5))" }}
       />
     );

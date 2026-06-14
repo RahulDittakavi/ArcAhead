@@ -1,9 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { api } from "./api";
 
 /* The current episode is the single most important piece of app state — it
-   drives every screen's spoiler gate. It is persisted server-side (PATCH /me)
-   and held here so the episode stepper can re-filter everything live. */
+   drives every screen's spoiler gate, and is sent as ?ep= on every API call.
+
+   DB-less build: it's persisted in the browser's localStorage, so each visitor
+   has their own independent progress (no shared server-side user, no account).
+   When multi-user accounts land later, this is the seam that would sync to a
+   per-user value on the server instead. */
+const STORAGE_KEY = "arcahead.currentEp";
+const DEFAULT_EP = 381;
+
 interface EpisodeCtx {
   ep: number;
   maxEp: number;
@@ -13,28 +19,21 @@ interface EpisodeCtx {
 
 const Ctx = createContext<EpisodeCtx | null>(null);
 
+function loadEp(maxEp: number): number {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const n = raw == null ? DEFAULT_EP : Number(raw);
+    if (!Number.isFinite(n)) return DEFAULT_EP;
+    return Math.max(1, Math.min(maxEp, Math.round(n)));
+  } catch {
+    return DEFAULT_EP;
+  }
+}
+
 export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNode; maxEp?: number }) {
-  const [ep, setEpState] = useState(381);
-  const [ready, setReady] = useState(false);
+  const [ep, setEpState] = useState(() => loadEp(maxEp));
+  const ready = true; // no async load — localStorage is synchronous
 
-  // Load the saved episode once on mount.
-  useEffect(() => {
-    let alive = true;
-    api
-      .me()
-      .then((me) => {
-        if (alive) setEpState(me.currentEp);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (alive) setReady(true);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  // Optimistic update + debounced persist so dragging the slider stays smooth.
   const setEp = useCallback(
     (next: number) => {
       const clamped = Math.max(1, Math.min(maxEp, Math.round(next)));
@@ -43,14 +42,13 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
     [maxEp]
   );
 
-  // Persist whenever ep settles (small debounce).
   useEffect(() => {
-    if (!ready) return;
-    const t = setTimeout(() => {
-      api.setEpisode(ep).catch(() => {});
-    }, 350);
-    return () => clearTimeout(t);
-  }, [ep, ready]);
+    try {
+      localStorage.setItem(STORAGE_KEY, String(ep));
+    } catch {
+      /* ignore (private mode / disabled storage) */
+    }
+  }, [ep]);
 
   return <Ctx.Provider value={{ ep, maxEp, ready, setEp }}>{children}</Ctx.Provider>;
 }

@@ -1,0 +1,23 @@
+[
+  { "id": "m-east-blue", "seriesId": "one-piece", "order": 1, "fromEp": 1, "toEp": 61,
+    "title": "East Blue Cleared", "reward": "East Blue Veteran",
+    "safeRecap": "Your crew came together one member at a time — a swordsman, a navigator, a sharpshooter, a cook — and set sail for the Grand Line." },
+  { "id": "m-alabasta", "seriesId": "one-piece", "order": 2, "fromEp": 62, "toEp": 130,
+    "title": "Alabasta Survived", "reward": "Desert Wayfarer",
+    "safeRecap": "You crossed a desert kingdom on the brink of war and watched a hard-won vow get carved into the sand." },
+  { "id": "m-sky-island", "seriesId": "one-piece", "order": 3, "fromEp": 136, "toEp": 206,
+    "title": "Skies Charted", "reward": "Cloud Voyager",
+    "safeRecap": "You climbed above the clouds to an island in the heavens and heard a bell ring out across the centuries." },
+  { "id": "m-water-7", "seriesId": "one-piece", "order": 4, "fromEp": 207, "toEp": 325,
+    "title": "Water 7 Weathered", "reward": "Shipwright's Friend",
+    "safeRecap": "You weathered a city of canals, a painful misunderstanding among friends, and a fight that proved a flag will not fall." },
+  { "id": "m-thriller-bark", "seriesId": "one-piece", "order": 5, "fromEp": 326, "toEp": 384,
+    "title": "Thriller Bark Braved", "reward": "Night of Fog",
+    "safeRecap": "You made it through a long night of fog aboard a ghost ship the size of an island — and met a new face hiding behind a song." },
+  { "id": "m-summit-war", "seriesId": "one-piece", "order": 6, "fromEp": 385, "toEp": 516,
+    "title": "Into the Wider World", "reward": "New World Bound",
+    "safeRecap": "You sailed past the calm of the first half of the Grand Line and into a far harsher, wider sea." },
+  { "id": "m-yonko", "seriesId": "one-piece", "order": 7, "fromEp": 880, "toEp": 1085,
+    "title": "Land of Samurai", "reward": "Emperor's Path",
+    "safeRecap": "You reached a faraway, sealed land of samurai where a storm long in the making finally broke." }
+]
