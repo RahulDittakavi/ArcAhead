@@ -8,6 +8,7 @@ import { useNav } from "../../lib/nav";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
+import { useIsMobile } from "../../lib/useIsMobile";
 
 const navLink: React.CSSProperties = { fontSize: 14.5, color: "var(--text-2)", cursor: "pointer", fontWeight: 500 };
 
@@ -23,6 +24,7 @@ const HIGHLIGHT_ARC_IDS = ["alabasta", "enies-lobby", "marineford", "wano"];
 
 export function Landing() {
   const { go } = useNav();
+  const isMobile = useIsMobile();
   const { ep } = useEpisode();
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
   const { data: arcs } = useApi(() => api.arcs(ep), [ep]);
@@ -39,11 +41,15 @@ export function Landing() {
 
       <header style={{ position: "relative", zIndex: 3, maxWidth: "var(--maxw)", margin: "0 auto", padding: "26px 32px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Logo />
-        <nav style={{ display: "flex", alignItems: "center", gap: 30 }}>
-          <span className="lnk" style={navLink}>How it works</span>
-          <span className="lnk" style={navLink}>The Crew</span>
-          <span className="lnk" style={navLink}>Spoiler Shield</span>
-          <button className="btn btn-sm btn-ghost" onClick={() => go("setup")}>Sign in</button>
+        <nav style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 30 }}>
+          {!isMobile && (
+            <>
+              <span className="lnk" style={navLink}>How it works</span>
+              <span className="lnk" style={navLink}>The Crew</span>
+              <span className="lnk" style={navLink}>Spoiler Shield</span>
+              <button className="btn btn-sm btn-ghost" onClick={() => go("setup")}>Sign in</button>
+            </>
+          )}
           <button className="btn btn-sm btn-primary" onClick={() => go("setup")}>Set sail free</button>
         </nav>
       </header>
@@ -98,7 +104,7 @@ export function Landing() {
           </div>
           <span className="chip"><Icon name="shield" size={12} color="var(--green)" /> spoiler-safe for your episode</span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(6, 1fr)", gap: 16 }}>
           {crew.map((c) => (
             <BountyPoster key={c.id} char={c} scale={0.9} onClick={() => go("setup")} />
           ))}
@@ -118,7 +124,7 @@ export function Landing() {
       <section style={{ position: "relative", zIndex: 2, maxWidth: "var(--maxw)", margin: "0 auto", padding: "70px 32px 20px" }}>
         <Eyebrow>Islands ahead</Eyebrow>
         <h2 style={{ fontSize: "clamp(26px,3.4vw,40px)", marginBottom: 28, maxWidth: 560 }}>Discovered islands light up. Distant ones stay in the fog.</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 16 }}>
           {highlightArcs.map((a) => {
             const fog = a.status === "future";
             return (
@@ -152,12 +158,12 @@ export function Landing() {
       <section style={{ position: "relative", zIndex: 2, maxWidth: "var(--maxw)", margin: "0 auto", padding: "70px 32px 30px" }}>
         <Eyebrow>What ArcAhead does</Eyebrow>
         <h2 style={{ fontSize: "clamp(28px,3.6vw,42px)", marginBottom: 36, maxWidth: 640 }}>Everything you need to enjoy the voyage — nothing you haven't reached yet.</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(6, 1fr)", gap: 16 }}>
           {features.map((f, i) => (
             <div
               key={i}
               style={{
-                gridColumn: f.big ? "span 3" : "span 2",
+                gridColumn: isMobile ? "auto" : f.big ? "span 3" : "span 2",
                 background: f.big ? "linear-gradient(160deg, var(--surface-2), var(--surface))" : "var(--surface)",
                 border: "1px solid var(--line)",
                 borderRadius: "var(--r-lg)",

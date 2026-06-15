@@ -5,6 +5,7 @@ import { SeaChart } from "../../components/viz";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
+import { useIsMobile } from "../../lib/useIsMobile";
 import type { ArcDto, EpisodeState } from "../../lib/types";
 
 const STATE_META: Record<EpisodeState, { icon: string; color: string; label: string }> = {
@@ -118,6 +119,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
 
 export function EpisodeTracker() {
   const { ep, maxEp, states, canonOnly, setCanonOnly } = useEpisode();
+  const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -130,7 +132,7 @@ export function EpisodeTracker() {
 
   return (
     <SeaChart>
-      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "16px 32px 80px" }}>
+      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: isMobile ? "12px 14px 32px" : "16px 32px 80px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16, marginBottom: 22 }}>
           <div>
             <Eyebrow>Episode log</Eyebrow>

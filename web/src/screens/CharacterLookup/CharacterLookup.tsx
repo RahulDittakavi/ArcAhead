@@ -7,6 +7,7 @@ import { LockedPanel } from "../../components/LockedPanel";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
+import { useIsMobile } from "../../lib/useIsMobile";
 
 function InfoHead({ icon, title }: { icon: string; title: string }) {
   return (
@@ -19,6 +20,7 @@ function InfoHead({ icon, title }: { icon: string; title: string }) {
 
 export function CharacterLookup({ initialCharId }: { initialCharId: string | null }) {
   const { ep } = useEpisode();
+  const isMobile = useIsMobile();
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
   const all = chars ?? [];
 
@@ -39,7 +41,7 @@ export function CharacterLookup({ initialCharId }: { initialCharId: string | nul
 
   return (
     <SeaChart>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "16px 32px 80px" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "12px 16px 32px" : "16px 32px 80px" }}>
         <Eyebrow>Safe crew lookup</Eyebrow>
         <h1 style={{ fontSize: "clamp(26px,3.2vw,40px)", marginBottom: 18 }}>Pull anyone's wanted poster — safely.</h1>
 
@@ -101,7 +103,7 @@ export function CharacterLookup({ initialCharId }: { initialCharId: string | nul
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16, marginBottom: 16 }}>
               <Card pad={26}>
                 <InfoHead icon="flag" title="Affiliations" />
                 <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 11 }}>
@@ -146,7 +148,7 @@ export function CharacterLookup({ initialCharId }: { initialCharId: string | nul
               <h3 style={{ fontSize: 17 }}>Still in the fog</h3>
               <span style={{ fontSize: 13, color: "var(--text-3)" }}>· revealed as you sail on</span>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 16 }}>
               {(match.locked ?? []).map((l, i) => (
                 <LockedPanel key={i} title={l.title} hint={l.hint} unlockEp={l.unlockEp} spoilerStyle="shield" />
               ))}

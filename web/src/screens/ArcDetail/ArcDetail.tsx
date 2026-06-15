@@ -7,6 +7,7 @@ import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
 import { useNav } from "../../lib/nav";
+import { useIsMobile } from "../../lib/useIsMobile";
 
 function InfoHead({ icon, title }: { icon: string; title: string }) {
   return (
@@ -31,6 +32,7 @@ function HeroStat({ icon, label, value }: { icon: string; label: string; value: 
 export function ArcDetail({ arcId }: { arcId: string | null }) {
   const { ep } = useEpisode();
   const { openArc } = useNav();
+  const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
 
@@ -53,7 +55,7 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
 
   return (
     <SeaChart>
-      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "16px 32px 80px" }}>
+      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: isMobile ? "12px 16px 32px" : "16px 32px 80px" }}>
         {/* island hero */}
         <div style={{ position: "relative", borderRadius: "var(--r-xl)", overflow: "hidden", marginBottom: 24, border: "1px solid var(--line)", minHeight: 280 }}>
           {full.hasBanner && !isFuture && full.banner ? (
@@ -64,7 +66,7 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(120deg, rgba(8,9,12,0.92) 30%, rgba(8,9,12,0.55))" }} />
           {isFuture && <div style={{ position: "absolute", inset: 0, backdropFilter: "blur(6px)", background: "rgba(8,9,12,0.35)" }} />}
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 90% -10%, var(--orange-faint), transparent 55%)" }} />
-          <div style={{ position: "relative", padding: "40px 40px 34px" }}>
+          <div style={{ position: "relative", padding: isMobile ? "26px 20px 24px" : "40px 40px 34px" }}>
             <div style={{ display: "flex", gap: 10, marginBottom: 14, alignItems: "center", flexWrap: "wrap" }}>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, letterSpacing: "1.5px", color: "var(--orange-hi)" }}>
                 {full.saga.toUpperCase()} SAGA · EP {full.start}–{full.end}
@@ -96,7 +98,7 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
         </div>
 
         {/* body */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 20, marginBottom: 28 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.5fr 1fr", gap: 20, marginBottom: 28 }}>
           <Card pad={28}>
             <InfoHead icon="sparkles" title="Moments worth the voyage" />
             <p style={{ fontSize: 12.5, color: "var(--text-3)", marginTop: -8, marginBottom: 18 }}>Vague on purpose — the feeling, never the facts.</p>

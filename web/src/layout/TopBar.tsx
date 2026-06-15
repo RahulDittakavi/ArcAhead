@@ -2,6 +2,7 @@ import { Icon } from "../components/Icon";
 import { useEpisode } from "../lib/episode";
 import { useApi } from "../lib/useApi";
 import { api } from "../lib/api";
+import { useIsMobile } from "../lib/useIsMobile";
 
 const miniStep: React.CSSProperties = {
   width: 30,
@@ -17,6 +18,7 @@ const miniStep: React.CSSProperties = {
 
 export function TopBar({ title }: { title: string }) {
   const { ep, maxEp, setEp } = useEpisode();
+  const isMobile = useIsMobile();
   // Mirrors the prototype TopBar: shows the current island under the title.
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const island = journey?.current?.island ?? "—";
@@ -30,7 +32,8 @@ export function TopBar({ title }: { title: string }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "14px 32px",
+        gap: 10,
+        padding: isMobile ? "10px 16px" : "14px 32px",
         borderBottom: "1px solid var(--line)",
         background: "color-mix(in oklab, var(--bg) 78%, transparent)",
         backdropFilter: "blur(14px)",
@@ -59,9 +62,11 @@ export function TopBar({ title }: { title: string }) {
             <Icon name="plus" size={15} />
           </button>
         </div>
-        <button className="btn btn-sm btn-ghost">
-          <Icon name="bell" size={16} />
-        </button>
+        {!isMobile && (
+          <button className="btn btn-sm btn-ghost">
+            <Icon name="bell" size={16} />
+          </button>
+        )}
       </div>
     </header>
   );

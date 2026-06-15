@@ -6,6 +6,7 @@ import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api, fmtHours } from "../../lib/api";
 import { useNav } from "../../lib/nav";
+import { useIsMobile } from "../../lib/useIsMobile";
 
 const stepBtn: React.CSSProperties = { width: 44, height: 44, borderRadius: 12, border: "1px solid var(--line-2)", background: "var(--surface-2)", color: "var(--text)", cursor: "pointer", display: "grid", placeItems: "center" };
 
@@ -24,6 +25,7 @@ function StatTile({ icon, label, value, sub, accent }: { icon: string; label: st
 export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
   const { ep, maxEp, setEp } = useEpisode();
   const { go } = useNav();
+  const isMobile = useIsMobile();
   const { data: series } = useApi(() => api.series(), []);
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
 
@@ -40,14 +42,14 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
 
   return (
     <SeaChart>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "20px 32px 80px" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "16px 16px 32px" : "20px 32px 80px" }}>
         <Eyebrow>Set your log pose</Eyebrow>
         <h1 style={{ fontSize: "clamp(28px,3.6vw,42px)", marginBottom: 8 }}>How far have you sailed?</h1>
         <p style={{ color: "var(--text-2)", fontSize: 16, marginBottom: 36, maxWidth: 540 }}>
           Tell us your last finished episode. We'll keep every island beyond it lost in the fog.
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "0.85fr 1.15fr", gap: 24, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.85fr 1.15fr", gap: 24, alignItems: "start" }}>
           <Card pad={22}>
             <div style={{ position: "relative", borderRadius: 14, overflow: "hidden", marginBottom: 18, aspectRatio: "16 / 10" }}>
               <PlaceImg name="ANIME_POSTER_IMAGE" radius={0} style={{ position: "absolute", inset: 0 }} />

@@ -7,10 +7,12 @@ import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
 import { useNav } from "../../lib/nav";
+import { useIsMobile } from "../../lib/useIsMobile";
 
 export function Dashboard() {
   const { ep } = useEpisode();
   const { openArc, openChar, go } = useNav();
+  const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const { data: reactions } = useApi(() => api.reactions(ep), [ep]);
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
@@ -40,7 +42,7 @@ export function Dashboard() {
 
   return (
     <SeaChart>
-      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "16px 32px 80px" }}>
+      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: isMobile ? "12px 16px 32px" : "16px 32px 80px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 22, flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ color: "var(--text-3)", fontSize: 14, marginBottom: 4 }}>Welcome back, navigator</div>
@@ -79,7 +81,7 @@ export function Dashboard() {
 
         {/* discovered · current · horizon */}
         <Card pad={0} style={{ overflow: "hidden", marginBottom: 20 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr 1fr" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1.1fr 1fr" }}>
             <div style={{ padding: "22px 24px", borderRight: "1px solid var(--line)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, color: "var(--text-2)" }}>
                 <Icon name="map-pinned" size={16} color="var(--green)" /> <span style={{ fontSize: 13, fontWeight: 600 }}>Islands discovered</span>
@@ -177,7 +179,7 @@ export function Dashboard() {
         )}
 
         {/* lower grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.4fr 1fr", gap: 20 }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <Card pad={26}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
@@ -186,7 +188,7 @@ export function Dashboard() {
                 </h3>
                 <span className="chip"><Icon name="shield" size={12} color="var(--green)" /> spoiler-free</span>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
                 <div style={{ borderRadius: "var(--r)", border: "1px solid var(--line)", padding: 20, background: "var(--surface-2)" }}>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: "1px", color: "var(--text-3)", marginBottom: 8 }}>UP NEXT</div>
                   <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, marginBottom: 8 }}>{journey.next ? journey.next.island : "The edge of the map"}</div>
