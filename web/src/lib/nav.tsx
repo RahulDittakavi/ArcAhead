@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-export type Screen = "landing" | "setup" | "dashboard" | "arc" | "character";
+export type Screen = "landing" | "setup" | "dashboard" | "episodes" | "arc" | "character";
 
 export interface Nav {
   screen: Screen;

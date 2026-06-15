@@ -1,4 +1,4 @@
-import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, SeriesRecord, MilestonesDto } from "./types";
+import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, SeriesRecord, MilestonesDto, EpisodeDto } from "./types";
 
 const BASE = "/api";
 
@@ -26,6 +26,15 @@ export const api = {
     get<ReactionDto[]>(`/reactions?${epq(ep)}${arc ? `&arc=${encodeURIComponent(arc)}` : ""}`),
 
   milestones: (ep?: number) => get<MilestonesDto>(`/milestones?${epq(ep)}`),
+
+  episodes: (ep?: number, opts?: { arc?: string; from?: number; to?: number }) => {
+    const q = new URLSearchParams();
+    if (ep != null) q.set("ep", String(ep));
+    if (opts?.arc) q.set("arc", opts.arc);
+    if (opts?.from != null) q.set("from", String(opts.from));
+    if (opts?.to != null) q.set("to", String(opts.to));
+    return get<EpisodeDto[]>(`/episodes?${q.toString()}`);
+  },
 };
 
 /** Client-side mirrors of the prototype display helpers (presentation only). */

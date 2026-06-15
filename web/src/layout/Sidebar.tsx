@@ -4,6 +4,7 @@ import { useNav, type Screen } from "../lib/nav";
 
 const items: { key: Screen; icon: string; label: string }[] = [
   { key: "dashboard", icon: "compass", label: "Voyage" },
+  { key: "episodes", icon: "list-checks", label: "Episode Log" },
   { key: "arc", icon: "map", label: "Grand Line Map" },
   { key: "character", icon: "scroll", label: "The Crew" },
 ];

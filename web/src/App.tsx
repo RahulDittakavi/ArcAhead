@@ -4,6 +4,7 @@ import { AppLayout } from "./layout/AppLayout";
 import { Landing } from "./screens/Landing/Landing";
 import { ProgressSetup } from "./screens/Setup/ProgressSetup";
 import { Dashboard } from "./screens/Dashboard/Dashboard";
+import { EpisodeTracker } from "./screens/EpisodeTracker/EpisodeTracker";
 import { ArcDetail } from "./screens/ArcDetail/ArcDetail";
 import { CharacterLookup } from "./screens/CharacterLookup/CharacterLookup";
 
@@ -45,6 +46,7 @@ export function App() {
   let content: React.ReactNode = null;
   if (screen === "setup") content = <ProgressSetup seriesTitle={SERIES_TITLE} />;
   else if (screen === "dashboard") content = <Dashboard />;
+  else if (screen === "episodes") content = <EpisodeTracker />;
   else if (screen === "arc") content = <ArcDetail arcId={selArcId} />;
   else if (screen === "character") content = <CharacterLookup initialCharId={selCharId} />;
 

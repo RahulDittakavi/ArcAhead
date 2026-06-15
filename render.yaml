@@ -9,7 +9,8 @@ services:
     # Build shared types → web (Vite) → server (tsc), in that order.
     # --include=dev is required: NODE_ENV=production (below) otherwise makes npm
     # skip devDependencies (typescript, vite, @types/*), breaking the build.
-    buildCommand: npm install --include=dev && npm run build
+    # `npm test` runs the anti-spoiler sweep — a leak fails the deploy (R-9.5).
+    buildCommand: npm install --include=dev && npm run build && npm test
     # Express serves web/dist + /api. Render injects PORT.
     startCommand: npm start
     healthCheckPath: /api/health

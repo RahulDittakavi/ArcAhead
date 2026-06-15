@@ -9,6 +9,7 @@ import { charactersRouter } from "./routes/characters.js";
 import { reactionsRouter } from "./routes/reactions.js";
 import { seriesRouter } from "./routes/series.js";
 import { milestonesRouter } from "./routes/milestones.js";
+import { episodesRouter } from "./routes/episodes.js";
 
 const app = express();
 app.use(cors());
@@ -18,6 +19,7 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/series", seriesRouter);
 app.use("/api/journey", journeyRouter);
 app.use("/api/arcs", arcsRouter);
+app.use("/api/episodes", episodesRouter);
 app.use("/api/characters", charactersRouter);
 app.use("/api/reactions", reactionsRouter);
 app.use("/api/milestones", milestonesRouter);

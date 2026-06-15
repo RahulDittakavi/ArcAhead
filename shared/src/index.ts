@@ -231,7 +231,54 @@ export interface TimelineDto {
 }
 
 // ---------------------------------------------------------------------------
-// User / me
+// Episode-level tracking
+// ---------------------------------------------------------------------------
+/** Per-episode watch state. `skipped` (e.g. skipped filler) still advances the
+ *  spoiler boundary, just like `watched`. */
+export type EpisodeState = "unwatched" | "watched" | "skipped" | "rewatching";
+
+/** Episode classification. Per policy, this is revealed AHEAD of the boundary
+ *  (so users can skip-plan); only titles/synopses stay gated. */
+export type EpisodeClassification = "canon" | "filler" | "mixed" | "recap" | "unclassified";
+
+/**
+ * Spoiler-filtered episode.
+ * - `label` ("Episode 1071") is always safe — it carries no plot.
+ * - `classification` is revealed ahead of the boundary (policy decision).
+ * - `arcId/arcName/saga` appear only once that arc is reached (arc.start <= ep).
+ * - `title` (the real, spoiler-laden episode title) appears only when the
+ *   episode itself is reached — and only if the KB has one.
+ */
+export interface EpisodeDto {
+  number: number;
+  label: string;
+  reached: boolean;
+  classification: EpisodeClassification;
+  arcId?: string;
+  arcName?: string;
+  saga?: string;
+  title?: string;
+}
+
+/**
+ * Derive the spoiler boundary (the effective "current episode") from a
+ * per-episode state map: the highest N such that every episode 1..N is
+ * non-`unwatched` (watched/skipped/rewatching). A gap drops the boundary to
+ * just before it — so marking a far-future episode watched does NOT advance the
+ * boundary, which keeps the shield safe. Returns 0 if episode 1 is unwatched.
+ */
+export function deriveBoundary(states: Record<number, EpisodeState>, maxEp: number): number {
+  let n = 0;
+  for (let i = 1; i <= maxEp; i++) {
+    const s = states[i];
+    if (s && s !== "unwatched") n = i;
+    else break;
+  }
+  return n;
+}
+
+// ---------------------------------------------------------------------------
+// User / me  (legacy shape; kept for reference — current build is DB-less)
 // ---------------------------------------------------------------------------
 export interface MeDto {
   id: string;

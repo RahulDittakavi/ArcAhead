@@ -14,3 +14,6 @@ web/dist/
 
 # image backups (not served/used by the app)
 web/public/uploads/*-original.*
+
+# TypeScript incremental build cache
+*.tsbuildinfo

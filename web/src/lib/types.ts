@@ -14,4 +14,7 @@ export type {
   MilestonesDto,
   SagaRecord,
   TimelineDto,
+  EpisodeState,
+  EpisodeClassification,
+  EpisodeDto,
 } from "@arcahead/shared";

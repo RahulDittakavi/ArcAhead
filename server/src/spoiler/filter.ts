@@ -14,6 +14,7 @@ import type {
   MilestoneRecord,
   MilestoneDto,
   MilestoneStatus,
+  EpisodeDto,
 } from "@arcahead/shared";
 import { hypeFor } from "./hype.js";
 
@@ -98,4 +99,27 @@ export function toMilestoneDto(m: MilestoneRecord, ep: number): MilestoneDto {
   const base: MilestoneDto = { id: m.id, status, title: m.title, reward: m.reward, fromEp: m.fromEp, toEp: m.toEp };
   if (status === "reached") base.safeRecap = m.safeRecap;
   return base;
+}
+
+/** Convert a single episode number (+ the arc it falls in, if any) to a
+ *  wire-safe DTO for the given boundary episode `ep`.
+ *  - `label` is always a plain "Episode N" — no plot.
+ *  - `classification` is revealed ahead (policy): canon/filler so users can
+ *    skip-plan. (Sourced from the arc's kind until episode-level data exists.)
+ *  - arc identity is sent only once that arc is reached (arc.start <= ep).
+ *  - the real episode `title` is sent only when the episode is reached AND the
+ *    KB actually has one (none yet — derived episodes have no titles). */
+export function toEpisodeDto(num: number, arc: ArcRecord | null, ep: number): EpisodeDto {
+  const dto: EpisodeDto = {
+    number: num,
+    label: `Episode ${num}`,
+    reached: num <= ep,
+    classification: arc ? arc.kind : "unclassified",
+  };
+  if (arc && arc.start <= ep) {
+    dto.arcId = arc.id;
+    dto.arcName = arc.name;
+    dto.saga = arc.saga;
+  }
+  return dto;
 }
