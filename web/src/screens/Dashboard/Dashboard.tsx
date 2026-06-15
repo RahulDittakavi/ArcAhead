@@ -5,12 +5,13 @@ import { LockedPanel } from "../../components/LockedPanel";
 import { ProgressViz } from "../../components/journeyViz";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
-import { api } from "../../lib/api";
+import { api, fmtHours } from "../../lib/api";
 import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
+import { computeStreak, pacePerWeek, countState } from "../../lib/stats";
 
 export function Dashboard() {
-  const { ep } = useEpisode();
+  const { ep, maxEp, states, ts } = useEpisode();
   const { openArc, openChar, go } = useNav();
   const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
@@ -31,10 +32,13 @@ export function Dashboard() {
   const arcDone = Math.min(arcLen, Math.max(0, ep - arc.start + 1));
   const arcPct = Math.round((arcDone / arcLen) * 100);
 
-  const sessions = [
-    { t: "Tonight", eps: "Ep 381–384", note: "Finish the island strong", mins: 96 },
-    { t: "This weekend", eps: "Ep 385–390", note: "Drop anchor at a brand-new world", mins: 144 },
-  ];
+  // ---- real, progress-derived stats (no fabricated numbers) ----
+  const streak = computeStreak(ts);
+  const pace = pacePerWeek(ts);
+  const watchedCount = countState(states, "watched");
+  const nextEp = ep < maxEp ? ep + 1 : null;
+  const epsLeftInArc = Math.max(0, arc.end - ep);
+  const remainingToFrontier = Math.max(0, maxEp - ep);
 
   const introducedChars = (chars ?? []).filter((c) => c.introduced).slice(0, 6);
   const discovered = journey.arcs.filter((a) => a.status === "done");
@@ -51,7 +55,11 @@ export function Dashboard() {
             </h1>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <span className="chip"><Icon name="flame" size={13} color="var(--orange-hi)" /> 12-day streak</span>
+            {streak > 0 ? (
+              <span className="chip"><Icon name="flame" size={13} color="var(--orange-hi)" /> {streak}-day streak</span>
+            ) : (
+              <span className="chip" onClick={() => go("episodes")} style={{ cursor: "pointer" }}><Icon name="flame" size={13} color="var(--text-3)" /> Start a streak</span>
+            )}
             <span className="chip"><Icon name="map-pin" size={13} color="var(--orange-hi)" /> {journey.doneCount} islands discovered</span>
           </div>
         </div>
@@ -208,24 +216,29 @@ export function Dashboard() {
 
             <Card pad={26}>
               <h3 style={{ fontSize: 19, marginBottom: 16, display: "flex", alignItems: "center", gap: 9 }}>
-                <Icon name="calendar-clock" size={19} color="var(--orange-hi)" /> Recommended watch sessions
+                <Icon name="play" size={19} color="var(--orange-hi)" /> Keep watching
               </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {sessions.map((s, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, padding: 16, borderRadius: "var(--r)", border: "1px solid var(--line)", background: "var(--surface-2)" }}>
-                    <div style={{ width: 46, height: 46, borderRadius: 12, background: "var(--orange-faint)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                      <Icon name="play" size={18} color="var(--orange-hi)" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>{s.t}</span>
-                        <span style={{ fontSize: 12, color: "var(--text-3)" }}>· {s.eps}</span>
-                      </div>
-                      <div style={{ fontSize: 13, color: "var(--text-2)", marginTop: 2 }}>{s.note}</div>
-                    </div>
-                    <span className="chip"><Icon name="clock" size={12} /> {s.mins}m</span>
+              {/* up next — fogged label only, never an episode title */}
+              <div onClick={() => go("episodes")} style={{ display: "flex", alignItems: "center", gap: 16, padding: 16, borderRadius: "var(--r)", border: "1px solid var(--line-2)", background: "var(--surface-2)", cursor: "pointer", marginBottom: 14 }}>
+                <div style={{ width: 46, height: 46, borderRadius: 12, background: "var(--orange-faint)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                  <Icon name="play" size={18} color="var(--orange-hi)" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: "1px", color: "var(--text-3)" }}>UP NEXT</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, marginTop: 2 }}>
+                    {nextEp ? `Episode ${nextEp}` : "You're all caught up"}
                   </div>
-                ))}
+                  <div style={{ fontSize: 12.5, color: "var(--text-2)", marginTop: 2 }}>
+                    {nextEp ? `${arc.island} · ${epsLeftInArc} ${epsLeftInArc === 1 ? "episode" : "episodes"} left in this island` : "Drop anchor — you've reached the frontier"}
+                  </div>
+                </div>
+                <Icon name="arrow-right" size={16} color="var(--text-3)" />
+              </div>
+              {/* real, derived stats */}
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3,1fr)", gap: 10 }}>
+                <MiniStat icon="check-check" label="Watched" value={`${watchedCount}`} sub="episodes" />
+                <MiniStat icon="clock" label="Time invested" value={fmtHours(watchedCount)} sub={`~${remainingToFrontier} to frontier`} />
+                <MiniStat icon="activity" label="Your pace" value={pace > 0 ? `${pace.toFixed(1)}/wk` : "—"} sub={pace > 0 ? "last 30 days" : "mark eps to track"} />
               </div>
             </Card>
           </div>
@@ -278,5 +291,17 @@ export function Dashboard() {
         </div>
       </div>
     </SeaChart>
+  );
+}
+
+function MiniStat({ icon, label, value, sub }: { icon: string; label: string; value: string; sub?: string }) {
+  return (
+    <div style={{ borderRadius: 12, border: "1px solid var(--line)", background: "var(--surface-2)", padding: "12px 14px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text-3)", fontSize: 11.5, marginBottom: 6 }}>
+        <Icon name={icon} size={13} /> {label}
+      </div>
+      <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, color: "var(--orange-hi)" }}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: "var(--text-4)", marginTop: 2 }}>{sub}</div>}
+    </div>
   );
 }

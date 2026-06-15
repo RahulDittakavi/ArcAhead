@@ -13,10 +13,15 @@ import { deriveBoundary, type EpisodeState } from "@arcahead/shared";
    slider keep working — `setEp(n)` just means "my position is n" (mark 1..n,
    clear the rest). The tracker screen uses the granular ops. */
 const STATES_KEY = "arcahead.episodeStates";
+const TS_KEY = "arcahead.episodeTs";
 const CANON_KEY = "arcahead.canonOnly";
 const DEFAULT_EP = 381; // seed for a fresh visitor, so the demo voyage is populated
 
 type StateMap = Record<number, EpisodeState>;
+/** When an episode was individually marked watched (epoch ms). Bulk/catch-up
+ *  actions (slider, "mark up to here", "mark arc") do NOT record a timestamp —
+ *  only real-time single marks do, so pace/streak reflect actual watching. */
+type TsMap = Record<number, number>;
 
 interface EpisodeCtx {
   ep: number;
@@ -30,6 +35,7 @@ interface EpisodeCtx {
   markUnwatched: (n: number) => void;
   markUpTo: (n: number) => void; // non-destructive bulk: 1..n watched
   markRange: (from: number, to: number, state: EpisodeState) => void;
+  ts: TsMap; // watch-event timestamps (individual marks only)
   canonOnly: boolean;
   setCanonOnly: (b: boolean) => void;
 }
@@ -53,8 +59,19 @@ function seedDefault(): StateMap {
   return m;
 }
 
+function loadTs(): TsMap {
+  try {
+    const raw = localStorage.getItem(TS_KEY);
+    const obj = raw ? (JSON.parse(raw) as TsMap) : null;
+    return obj && typeof obj === "object" ? obj : {};
+  } catch {
+    return {};
+  }
+}
+
 export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNode; maxEp?: number }) {
   const [states, setStates] = useState<StateMap>(() => loadStates() ?? seedDefault());
+  const [ts, setTs] = useState<TsMap>(() => loadTs());
   const [canonOnly, setCanonOnlyState] = useState<boolean>(() => {
     try { return localStorage.getItem(CANON_KEY) === "1"; } catch { return false; }
   });
@@ -62,6 +79,9 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
   useEffect(() => {
     try { localStorage.setItem(STATES_KEY, JSON.stringify(states)); } catch { /* ignore */ }
   }, [states]);
+  useEffect(() => {
+    try { localStorage.setItem(TS_KEY, JSON.stringify(ts)); } catch { /* ignore */ }
+  }, [ts]);
   useEffect(() => {
     try { localStorage.setItem(CANON_KEY, canonOnly ? "1" : "0"); } catch { /* ignore */ }
   }, [canonOnly]);
@@ -87,9 +107,17 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
     });
   }, [clamp]);
 
-  const markWatched = useCallback((n: number) => setOne(n, "watched"), [setOne]);
+  const markWatched = useCallback((n: number) => {
+    setOne(n, "watched");
+    const k = clamp(n);
+    setTs((prev) => ({ ...prev, [k]: Date.now() })); // real-time watch event
+  }, [setOne, clamp]);
   const markSkipped = useCallback((n: number) => setOne(n, "skipped"), [setOne]);
-  const markUnwatched = useCallback((n: number) => setOne(n, null), [setOne]);
+  const markUnwatched = useCallback((n: number) => {
+    setOne(n, null);
+    const k = clamp(n);
+    setTs((prev) => { const next = { ...prev }; delete next[k]; return next; });
+  }, [setOne, clamp]);
 
   const markUpTo = useCallback((n: number) => {
     const k = clamp(n);
@@ -117,7 +145,7 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
   const value: EpisodeCtx = {
     ep, maxEp, ready: true, states, stateOf, setEp,
     markWatched, markSkipped, markUnwatched, markUpTo, markRange,
-    canonOnly, setCanonOnly: setCanonOnlyState,
+    ts, canonOnly, setCanonOnly: setCanonOnlyState,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
