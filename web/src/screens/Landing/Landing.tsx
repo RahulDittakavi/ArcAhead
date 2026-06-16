@@ -33,8 +33,11 @@ export function Landing() {
   const highlightArcs = HIGHLIGHT_ARC_IDS.map((id) => (arcs ?? []).find((a) => a.id === id)).filter(Boolean) as NonNullable<typeof arcs>;
 
   return (
-    <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", top: -160, left: "50%", transform: "translateX(-50%)", width: 900, height: 520, background: "radial-gradient(ellipse at center, var(--orange-faint), transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
+    // clip horizontal overflow from the decorative glows/compass — they bleed
+    // wider than narrow viewports and were causing a scroll-right into blank.
+    // Root height is auto, so clipping X can't create a nested scroll container.
+    <div style={{ position: "relative", overflowX: "hidden" }}>
+      <div style={{ position: "absolute", top: -160, left: "50%", transform: "translateX(-50%)", width: "min(900px, 100%)", height: 520, background: "radial-gradient(ellipse at center, var(--orange-faint), transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
       <div style={{ position: "absolute", top: 40, right: 60, opacity: 0.5, pointerEvents: "none", zIndex: 0 }}>
         <CompassRose size={150} opacity={0.4} />
       </div>
