@@ -1,0 +1,332 @@
+[
+  {
+    "seriesId": "one-piece",
+    "from": 45,
+    "to": 47,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 54,
+    "to": 60,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 61,
+    "to": 61,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 68,
+    "to": 69,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 98,
+    "to": 99,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 101,
+    "to": 101,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 102,
+    "to": 102,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 131,
+    "to": 143,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 196,
+    "to": 206,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 220,
+    "to": 225,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 226,
+    "to": 226,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 279,
+    "to": 283,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 291,
+    "to": 292,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 303,
+    "to": 303,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 317,
+    "to": 319,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 326,
+    "to": 336,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 354,
+    "to": 354,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 382,
+    "to": 384,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 406,
+    "to": 407,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 421,
+    "to": 421,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 426,
+    "to": 429,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 457,
+    "to": 458,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 489,
+    "to": 489,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 492,
+    "to": 492,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 520,
+    "to": 520,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 542,
+    "to": 542,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 574,
+    "to": 574,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 575,
+    "to": 578,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 590,
+    "to": 590,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 625,
+    "to": 625,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 626,
+    "to": 627,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 628,
+    "to": 628,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 633,
+    "to": 633,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 653,
+    "to": 653,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 657,
+    "to": 657,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 679,
+    "to": 679,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 690,
+    "to": 690,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 731,
+    "to": 731,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 738,
+    "to": 738,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 747,
+    "to": 750,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 751,
+    "to": 751,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 777,
+    "to": 778,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 780,
+    "to": 782,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 789,
+    "to": 789,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 803,
+    "to": 803,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 807,
+    "to": 807,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 878,
+    "to": 879,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 881,
+    "to": 885,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 887,
+    "to": 890,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 895,
+    "to": 896,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 907,
+    "to": 907,
+    "classification": "filler"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 924,
+    "to": 924,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 988,
+    "to": 989,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 991,
+    "to": 991,
+    "classification": "mixed"
+  },
+  {
+    "seriesId": "one-piece",
+    "from": 1029,
+    "to": 1030,
+    "classification": "filler"
+  }
+]

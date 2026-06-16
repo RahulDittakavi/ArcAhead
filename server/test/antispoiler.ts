@@ -118,7 +118,7 @@ function payloadsAt(ep: number): Record<string, unknown> {
     reactions: reactions
       .filter((r) => reached.has(r.arc))
       .map((r) => ({ id: r.id, user: r.user, arc: r.arc, text: r.text, hype: r.hype, ago: r.ago })),
-    episodes: Array.from({ length: total }, (_, i) => toEpisodeDto(i + 1, arcFor(i + 1), ep)),
+    episodes: Array.from({ length: total }, (_, i) => toEpisodeDto(i + 1, arcFor(i + 1), ep, kb.episodeClass(i + 1))),
   };
 }
 
@@ -154,6 +154,25 @@ for (const ep of boundaries) {
   if ("title" in e500) fail("structural: unwatched episode 500 leaked a title @ep381");
   if (e500.arcId !== undefined) fail("structural: episode 500 leaked arcId for an unreached arc @ep381");
   if (e500.label !== "Episode 500") fail("structural: episode 500 label not fogged");
+}
+
+// ---- 2b. episode-class overlay: override wins, falls back, reveals ahead safely ----
+{
+  // ep 40 sits in arlong-park (canon). With no override it inherits the arc kind…
+  const arc40 = arcFor(40);
+  const base = toEpisodeDto(40, arc40, 1000, null);
+  if (base.classification !== "canon") fail(`overlay: ep40 should fall back to arc kind 'canon', got '${base.classification}'`);
+  // …and an override wins over the arc default.
+  const over = toEpisodeDto(40, arc40, 1000, "filler");
+  if (over.classification !== "filler") fail(`overlay: ep40 override 'filler' not applied, got '${over.classification}'`);
+  // Reveal-ahead: classification is shown even when the episode is far past the
+  // boundary — but it must NOT drag any arc identity along with it.
+  const ahead = toEpisodeDto(40, arc40, 1) as Record<string, unknown>;
+  if (ahead.classification !== "canon") fail("overlay: classification not revealed ahead of boundary");
+  if (ahead.reached !== false) fail("overlay: ep40 should be reached:false @ep1");
+  if (ahead.arcId !== undefined) fail("overlay: classification-ahead leaked arcId for an unreached arc @ep1");
+  // The disjoint-range invariant the resolver relies on holds for shipped data.
+  for (let n = 1; n <= total; n++) kb.episodeClass(n); // throws nothing → ranges resolve
 }
 
 // ---- 3. ep-param fuzzing: resolves safely, never over-reveals ----

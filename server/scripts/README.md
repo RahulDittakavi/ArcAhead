@@ -1,6 +1,14 @@
 # KB sync
 
-Author arc content in a spreadsheet, ship it as validated JSON.
+Author curated content in a spreadsheet, ship it as validated JSON.
+
+Two targets, one code path:
+
+- `--target=arcs` (default) → `server/data/arcs.json` — one row per arc
+- `--target=filler` → `server/data/episode-class.json` — episode-level
+  filler/recap overrides (an arc's `kind` is the default; this overlay overrides
+  sub-ranges, since One Piece filler isn't arc-aligned). An empty overlay is
+  valid and means "arc defaults everywhere" — today's behavior.
 
 The runtime source of truth is **`server/data/arcs.json`** (loaded fail-closed at
 boot). This script lets you edit that content somewhere friendlier — a local
@@ -51,8 +59,31 @@ npm test
 ## Bootstrap a sheet from current data
 
 ```bash
-npm run sync:kb -- --export > arcs.csv     # then import arcs.csv into Sheets/Excel
+npm run sync:kb -- --export > arcs.csv                  # arcs tab
+npm run sync:kb -- --target=filler --export > filler.csv # filler tab
+# then import each into its own tab in Sheets/Excel
 ```
+
+## Filler overlay (`--target=filler`)
+
+A second tab named **`Filler`** in the same Google Sheet. One row per
+filler/recap stretch — you only enumerate the exceptions; everything else
+inherits its arc's `kind`.
+
+```bash
+npm run sync:kb -- --target=filler --source="gsheet:<sheetId>:Filler"
+```
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `from`, `to` | int | inclusive episode range; `to >= from`; single ep = same number |
+| `classification` | `canon` \| `filler` \| `mixed` \| `recap` | |
+| `note` | string | optional curation note — **server-side only, never sent to clients** |
+
+Ranges must not overlap — the KB refuses to boot if they do (fail-closed), so an
+accidental double-classification can't ship. `classification` is revealed ahead
+of the boundary (so you can skip-plan), the same policy as arc `kind`; it says
+nothing about plot.
 
 ## Columns
 

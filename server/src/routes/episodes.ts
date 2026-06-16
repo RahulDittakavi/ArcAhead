@@ -37,7 +37,7 @@ episodesRouter.get("/", async (req, res, next) => {
     if (to < from) return res.json([]);
 
     const out: EpisodeDto[] = [];
-    for (let n = from; n <= to; n++) out.push(toEpisodeDto(n, lookup(n), ep));
+    for (let n = from; n <= to; n++) out.push(toEpisodeDto(n, lookup(n), ep, kb.episodeClass(n)));
     res.json(out);
   } catch (e) {
     next(e);

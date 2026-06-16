@@ -14,12 +14,15 @@ import type {
   SeriesRecord,
   SagaRecord,
   MilestoneRecord,
+  EpisodeClassRecord,
+  EpisodeClassification,
 } from "@arcahead/shared";
 import {
   ArcsFileSchema,
   CharactersFileSchema,
   ReactionsFileSchema,
   MilestonesFileSchema,
+  EpisodeClassFileSchema,
   TimelineSchema,
 } from "./schema.js";
 
@@ -63,19 +66,35 @@ const arcs = parseOrThrow("arcs.json", ArcsFileSchema) as ArcRecord[];
 const characters = parseOrThrow("characters.json", CharactersFileSchema) as CharacterRecord[];
 const reactions = parseOrThrow("reactions.json", ReactionsFileSchema) as ReactionRecord[];
 const milestones = parseOrThrow("milestones.json", MilestonesFileSchema) as MilestoneRecord[];
+const episodeClass = parseOrThrow("episode-class.json", EpisodeClassFileSchema) as EpisodeClassRecord[];
 
 // ---- cross-checks: a single series, everything tied to it ----
 const SERIES_ID = timeline.series.id;
 const stray = [
   ...arcs.filter((a) => a.seriesId !== SERIES_ID),
   ...characters.filter((c) => c.seriesId !== SERIES_ID),
-].map((x) => x.id);
+  ...episodeClass.filter((e) => e.seriesId !== SERIES_ID),
+].map((x) => ("id" in x ? x.id : `${x.from}-${x.to}`));
 if (stray.length) {
   throw new Error(`KB: records reference an unknown series: ${stray.join(", ")}`);
 }
 
+// ---- episode-class overlay: sort + reject overlaps (fail-closed) ----
+// Overlapping ranges would make classification ambiguous; refuse to boot rather
+// than resolve unpredictably. Lookups assume this sorted, disjoint invariant.
+const episodeClassSorted = [...episodeClass].sort((a, b) => a.from - b.from);
+for (let i = 1; i < episodeClassSorted.length; i++) {
+  const prev = episodeClassSorted[i - 1];
+  const cur = episodeClassSorted[i];
+  if (cur.from <= prev.to) {
+    throw new Error(
+      `KB: episode-class ranges overlap: [${prev.from}-${prev.to}] and [${cur.from}-${cur.to}]`
+    );
+  }
+}
+
 console.log(
-  `KB loaded: ${arcs.length} arcs · ${characters.length} characters · ${milestones.length} milestones · ${reactions.length} reactions`
+  `KB loaded: ${arcs.length} arcs · ${characters.length} characters · ${milestones.length} milestones · ${reactions.length} reactions · ${episodeClass.length} class overrides`
 );
 
 // ---- accessors (return copies/sorted views so callers can't mutate the KB) ----
@@ -104,5 +123,12 @@ export const kb = {
   },
   milestones(): MilestoneRecord[] {
     return [...milestones].sort((a, b) => a.order - b.order);
+  },
+  /** Episode-level classification OVERRIDE for episode `n`, or null if no
+   *  overlay entry covers it (caller falls back to the arc's `kind`). Ranges are
+   *  validated disjoint at boot, so the first containing range is authoritative. */
+  episodeClass(n: number): EpisodeClassification | null {
+    const hit = episodeClassSorted.find((e) => e.from <= n && n <= e.to);
+    return hit ? hit.classification : null;
   },
 };

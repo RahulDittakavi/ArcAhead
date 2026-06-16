@@ -261,6 +261,27 @@ export interface EpisodeDto {
 }
 
 /**
+ * Episode-level classification override. An arc's `kind` is the DEFAULT for
+ * every episode in its range; an overlay entry overrides a sub-range — e.g. a
+ * filler stretch wedged inside a canon arc, or a recap episode. One Piece filler
+ * is not arc-aligned, so this overlay is what makes "Canon only" actually true.
+ *
+ * Only a handful of ranges need entries (the exceptions); everything else falls
+ * back to the arc default. `note` is curation metadata and stays server-side —
+ * it never reaches a client, so it carries no spoiler risk.
+ *
+ * Same reveal policy as arc kind: classification is shown AHEAD of the boundary
+ * so users can skip-plan. It says nothing about plot, only "canon vs filler".
+ */
+export interface EpisodeClassRecord {
+  seriesId: string;
+  from: number;
+  to: number;
+  classification: Exclude<EpisodeClassification, "unclassified">;
+  note?: string;
+}
+
+/**
  * Derive the spoiler boundary (the effective "current episode") from a
  * per-episode state map: the highest N such that every episode 1..N is
  * non-`unwatched` (watched/skipped/rewatching). A gap drops the boundary to

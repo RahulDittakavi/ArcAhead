@@ -98,7 +98,18 @@ export const MilestoneSchema = z
   })
   .refine((m) => m.toEp >= m.fromEp, { message: "milestone toEp must be >= fromEp" });
 
+export const EpisodeClassSchema = z
+  .object({
+    seriesId: z.string(),
+    from: z.number().int().positive(),
+    to: z.number().int().positive(),
+    classification: z.enum(["canon", "filler", "mixed", "recap"]),
+    note: z.string().optional(),
+  })
+  .refine((e) => e.to >= e.from, { message: "episode-class `to` must be >= `from`" });
+
 export const ArcsFileSchema = z.array(ArcSchema).min(1);
+export const EpisodeClassFileSchema = z.array(EpisodeClassSchema); // may be empty (overlay)
 export const CharactersFileSchema = z.array(CharacterSchema).min(1);
 export const ReactionsFileSchema = z.array(ReactionSchema);
 export const MilestonesFileSchema = z.array(MilestoneSchema);
