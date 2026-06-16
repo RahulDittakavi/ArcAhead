@@ -17,6 +17,7 @@ import { kb } from "../src/kb/index.js";
 import { resolveEp } from "../src/db.js";
 import { buildJourney } from "../src/spoiler/journey.js";
 import { toArcDto, toCharacterDto, toMilestoneDto, toEpisodeDto, milestoneStatus } from "../src/spoiler/filter.js";
+import { searchKb } from "../src/spoiler/search.js";
 
 const total = kb.series().episodes;
 const arcs = kb.arcs();
@@ -178,6 +179,28 @@ for (const ep of boundaries) {
   if (ahead.arcId !== undefined) fail("overlay: classification-ahead leaked arcId for an unreached arc @ep1");
   // The disjoint-range invariant the resolver relies on holds for shipped data.
   for (let n = 1; n <= total; n++) kb.episodeClass(n); // throws nothing → ranges resolve
+}
+
+// ---- 2c. search never surfaces future content ----
+// Adversarial: at each boundary, search for the exact name of every future arc
+// and unmet character. The gate must return them in NEITHER list, and the
+// result payload must contain none of the boundary's secret strings.
+for (const ep of boundaries) {
+  const secrets = secretSet(ep);
+  const futureArcIds = new Set(arcs.filter((a) => a.start > ep).map((a) => a.id));
+  const unmetCharIds = new Set(characters.filter((c) => c.epaffirst > ep).map((c) => c.id));
+  const queries = [
+    ...arcs.filter((a) => a.start > ep).map((a) => a.name),
+    ...characters.filter((c) => c.epaffirst > ep).map((c) => c.name),
+  ];
+  for (const query of queries) {
+    if (query.length < 2) continue;
+    const r = searchKb(query, ep);
+    for (const a of r.arcs) if (futureArcIds.has(a.id)) fail(`SEARCH @ep${ep}: future arc '${a.id}' surfaced for query "${query}"`);
+    for (const c of r.characters) if (unmetCharIds.has(c.id)) fail(`SEARCH @ep${ep}: unmet char '${c.id}' surfaced for query "${query}"`);
+    const json = JSON.stringify(r);
+    for (const s of secrets) if (json.includes(s.value)) fail(`SEARCH LEAK @ep${ep}: "${s.from}" in results for query "${query}"`);
+  }
 }
 
 // ---- 3. ep-param fuzzing: resolves safely, never over-reveals ----

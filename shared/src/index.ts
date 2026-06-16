@@ -229,6 +229,17 @@ export interface MilestonesDto {
 }
 
 // ---------------------------------------------------------------------------
+// Search — spoiler-safe. Only content the user has REACHED is searchable, so a
+// lucky guess can never confirm what lies ahead. Results are the same gated DTOs
+// used elsewhere.
+// ---------------------------------------------------------------------------
+export interface SearchResultsDto {
+  query: string;
+  arcs: ArcDto[];
+  characters: CharacterDto[];
+}
+
+// ---------------------------------------------------------------------------
 // Timeline — the journey spine: series meta + ordered sagas. Authoritative
 // source for total episode count and saga ordering.
 // ---------------------------------------------------------------------------

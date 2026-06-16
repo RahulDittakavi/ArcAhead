@@ -1,4 +1,4 @@
-import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, SeriesRecord, MilestonesDto, EpisodeDto } from "./types";
+import type { JourneyDto, ArcDto, CharacterDto, ReactionDto, SeriesRecord, MilestonesDto, EpisodeDto, SearchResultsDto } from "./types";
 
 const BASE = "/api";
 
@@ -26,6 +26,9 @@ export const api = {
     get<ReactionDto[]>(`/reactions?${epq(ep)}${arc ? `&arc=${encodeURIComponent(arc)}` : ""}`),
 
   milestones: (ep?: number) => get<MilestonesDto>(`/milestones?${epq(ep)}`),
+
+  search: (q: string, ep?: number) =>
+    get<SearchResultsDto>(`/search?q=${encodeURIComponent(q)}${ep != null ? `&ep=${ep}` : ""}`),
 
   episodes: (ep?: number, opts?: { arc?: string; from?: number; to?: number }) => {
     const q = new URLSearchParams();

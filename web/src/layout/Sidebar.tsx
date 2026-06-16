@@ -96,7 +96,9 @@ export function Sidebar() {
             <div style={{ fontSize: 13, fontWeight: 600 }}>navigator</div>
             <div style={{ fontSize: 11, color: "var(--text-3)" }}>Free crew</div>
           </div>
-          <Icon name="settings" size={16} color="var(--text-3)" />
+          <button onClick={() => go("settings")} title="Settings" style={{ background: "transparent", border: "none", cursor: "pointer", display: "grid", placeItems: "center", padding: 4 }}>
+            <Icon name="settings" size={16} color="var(--text-3)" />
+          </button>
         </div>
       </div>
     </aside>

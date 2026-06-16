@@ -15,6 +15,7 @@ import { deriveBoundary, type EpisodeState } from "@arcahead/shared";
 const STATES_KEY = "arcahead.episodeStates";
 const TS_KEY = "arcahead.episodeTs";
 const CANON_KEY = "arcahead.canonOnly";
+const HIDEMIXED_KEY = "arcahead.hideMixed";
 const DEFAULT_EP = 381; // seed for a fresh visitor, so the demo voyage is populated
 
 type StateMap = Record<number, EpisodeState>;
@@ -38,6 +39,11 @@ interface EpisodeCtx {
   ts: TsMap; // watch-event timestamps (individual marks only)
   canonOnly: boolean;
   setCanonOnly: (b: boolean) => void;
+  hideMixed: boolean; // when canonOnly, also hide `mixed` episodes (stricter)
+  setHideMixed: (b: boolean) => void;
+  resetProgress: () => void; // wipe all watch state (back to a blank voyage)
+  exportData: () => string; // serialize progress for backup/transfer
+  importData: (raw: string) => boolean; // restore from exportData() output
 }
 
 const Ctx = createContext<EpisodeCtx | null>(null);
@@ -75,6 +81,9 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
   const [canonOnly, setCanonOnlyState] = useState<boolean>(() => {
     try { return localStorage.getItem(CANON_KEY) === "1"; } catch { return false; }
   });
+  const [hideMixed, setHideMixedState] = useState<boolean>(() => {
+    try { return localStorage.getItem(HIDEMIXED_KEY) === "1"; } catch { return false; }
+  });
 
   useEffect(() => {
     try { localStorage.setItem(STATES_KEY, JSON.stringify(states)); } catch { /* ignore */ }
@@ -85,6 +94,9 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
   useEffect(() => {
     try { localStorage.setItem(CANON_KEY, canonOnly ? "1" : "0"); } catch { /* ignore */ }
   }, [canonOnly]);
+  useEffect(() => {
+    try { localStorage.setItem(HIDEMIXED_KEY, hideMixed ? "1" : "0"); } catch { /* ignore */ }
+  }, [hideMixed]);
 
   const ep = useMemo(() => deriveBoundary(states, maxEp), [states, maxEp]);
 
@@ -142,10 +154,33 @@ export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNod
 
   const stateOf = useCallback((n: number): EpisodeState => states[n] ?? "unwatched", [states]);
 
+  const resetProgress = useCallback(() => { setStates({}); setTs({}); }, []);
+
+  const exportData = useCallback(
+    () => JSON.stringify({ v: 1, states, ts, canonOnly, hideMixed }, null, 2),
+    [states, ts, canonOnly, hideMixed]
+  );
+
+  const importData = useCallback((raw: string): boolean => {
+    try {
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object" || typeof obj.states !== "object") return false;
+      setStates(obj.states ?? {});
+      setTs(obj.ts && typeof obj.ts === "object" ? obj.ts : {});
+      if (typeof obj.canonOnly === "boolean") setCanonOnlyState(obj.canonOnly);
+      if (typeof obj.hideMixed === "boolean") setHideMixedState(obj.hideMixed);
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
   const value: EpisodeCtx = {
     ep, maxEp, ready: true, states, stateOf, setEp,
     markWatched, markSkipped, markUnwatched, markUpTo, markRange,
     ts, canonOnly, setCanonOnly: setCanonOnlyState,
+    hideMixed, setHideMixed: setHideMixedState,
+    resetProgress, exportData, importData,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

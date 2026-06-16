@@ -41,6 +41,10 @@ import {
   Sparkles,
   Star,
   Users,
+  X,
+  Download,
+  Upload,
+  Trash2,
   type LucideIcon,
 } from "lucide-react";
 import type { CSSProperties } from "react";
@@ -91,6 +95,10 @@ const REGISTRY: Record<string, LucideIcon> = {
   sparkles: Sparkles,
   star: Star,
   users: Users,
+  x: X,
+  download: Download,
+  upload: Upload,
+  trash: Trash2,
 };
 
 interface IconProps {

@@ -10,6 +10,7 @@ import { reactionsRouter } from "./routes/reactions.js";
 import { seriesRouter } from "./routes/series.js";
 import { milestonesRouter } from "./routes/milestones.js";
 import { episodesRouter } from "./routes/episodes.js";
+import { searchRouter } from "./routes/search.js";
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ app.use("/api/episodes", episodesRouter);
 app.use("/api/characters", charactersRouter);
 app.use("/api/reactions", reactionsRouter);
 app.use("/api/milestones", milestonesRouter);
+app.use("/api/search", searchRouter);
 
 // ---- serve the built SPA (production single-service deploy) ----
 // In dev, Vite serves the frontend and proxies /api here, so this is skipped.

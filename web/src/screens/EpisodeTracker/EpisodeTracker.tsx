@@ -47,7 +47,7 @@ function CountBadges({ c }: { c: ClassCounts }) {
 }
 
 function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean; onToggle: () => void }) {
-  const { stateOf, markWatched, markSkipped, markUnwatched, markUpTo, markRange, canonOnly, ep } = useEpisode();
+  const { stateOf, markWatched, markSkipped, markUnwatched, markUpTo, markRange, canonOnly, hideMixed, ep } = useEpisode();
   const fut = arc.status === "future";
 
   // count watched/skipped in this arc's range (from client state — no server needed)
@@ -116,7 +116,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
           </div>
           <div>
             {(eps ?? []).map((e) => {
-              if (canonOnly && e.classification === "filler") return null;
+              if (canonOnly && (e.classification === "filler" || (hideMixed && e.classification === "mixed"))) return null;
               const st = stateOf(e.number);
               const meta = STATE_META[st];
               const cc = classChip(e.classification);

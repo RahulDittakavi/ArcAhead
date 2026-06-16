@@ -18,4 +18,5 @@ export type {
   EpisodeState,
   EpisodeClassification,
   EpisodeDto,
+  SearchResultsDto,
 } from "@arcahead/shared";

@@ -7,6 +7,8 @@ import { Dashboard } from "./screens/Dashboard/Dashboard";
 import { EpisodeTracker } from "./screens/EpisodeTracker/EpisodeTracker";
 import { ArcDetail } from "./screens/ArcDetail/ArcDetail";
 import { CharacterLookup } from "./screens/CharacterLookup/CharacterLookup";
+import { Search } from "./screens/Search/Search";
+import { Settings } from "./screens/Settings/Settings";
 
 const SERIES_TITLE = "One Piece"; // single tracked title for this build
 
@@ -49,6 +51,8 @@ export function App() {
   else if (screen === "episodes") content = <EpisodeTracker />;
   else if (screen === "arc") content = <ArcDetail arcId={selArcId} />;
   else if (screen === "character") content = <CharacterLookup initialCharId={selCharId} />;
+  else if (screen === "search") content = <Search />;
+  else if (screen === "settings") content = <Settings />;
 
   return (
     <NavContext.Provider value={nav}>

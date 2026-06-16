@@ -1,5 +1,6 @@
 import { Icon } from "../components/Icon";
 import { useEpisode } from "../lib/episode";
+import { useNav } from "../lib/nav";
 import { useApi } from "../lib/useApi";
 import { api } from "../lib/api";
 import { useIsMobile } from "../lib/useIsMobile";
@@ -18,6 +19,7 @@ const miniStep: React.CSSProperties = {
 
 export function TopBar({ title }: { title: string }) {
   const { ep, maxEp, setEp } = useEpisode();
+  const { go } = useNav();
   const isMobile = useIsMobile();
   // Mirrors the prototype TopBar: shows the current island under the title.
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
@@ -62,11 +64,12 @@ export function TopBar({ title }: { title: string }) {
             <Icon name="plus" size={15} />
           </button>
         </div>
-        {!isMobile && (
-          <button className="btn btn-sm btn-ghost">
-            <Icon name="bell" size={16} />
-          </button>
-        )}
+        <button className="btn btn-sm btn-ghost" onClick={() => go("search")} title="Search">
+          <Icon name="search" size={16} />
+        </button>
+        <button className="btn btn-sm btn-ghost" onClick={() => go("settings")} title="Settings">
+          <Icon name="settings" size={16} />
+        </button>
       </div>
     </header>
   );
