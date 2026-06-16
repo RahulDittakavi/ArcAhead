@@ -10,7 +10,7 @@ export const arcsRouter = Router();
 arcsRouter.get("/", async (req, res, next) => {
   try {
     const ep = await resolveEp(req.query.ep);
-    res.json(kb.arcs().map((a) => toArcDto(a, ep)));
+    res.json(kb.arcs().map((a) => toArcDto(a, ep, kb.classCounts(a.start, a.end, a.kind))));
   } catch (e) {
     next(e);
   }
@@ -23,7 +23,7 @@ arcsRouter.get("/:id", async (req, res, next) => {
     const arc = kb.arc(req.params.id);
     if (!arc) return res.status(404).json({ error: "arc not found" });
     // filter first, then (optionally) reformat — presenter only ever sees the DTO
-    res.json(getPresenter().arc(toArcDto(arc, ep)));
+    res.json(getPresenter().arc(toArcDto(arc, ep, kb.classCounts(arc.start, arc.end, arc.kind))));
   } catch (e) {
     next(e);
   }

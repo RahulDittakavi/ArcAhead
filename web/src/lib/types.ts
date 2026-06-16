@@ -3,6 +3,7 @@ export type {
   ArcStatus,
   ArcKind,
   ArcDto,
+  ClassCounts,
   JourneyDto,
   CharacterDto,
   LockedFactDto,

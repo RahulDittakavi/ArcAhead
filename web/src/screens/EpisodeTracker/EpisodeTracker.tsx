@@ -6,7 +6,7 @@ import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
 import { useIsMobile } from "../../lib/useIsMobile";
-import type { ArcDto, EpisodeState } from "../../lib/types";
+import type { ArcDto, EpisodeState, ClassCounts } from "../../lib/types";
 
 const STATE_META: Record<EpisodeState, { icon: string; color: string; label: string }> = {
   unwatched: { icon: "circle", color: "var(--text-4)", label: "Unwatched" },
@@ -17,15 +17,33 @@ const STATE_META: Record<EpisodeState, { icon: string; color: string; label: str
 // click cycles through these
 const CYCLE: EpisodeState[] = ["unwatched", "watched", "skipped"];
 
+const CLASS_META: Record<string, { label: string; color: string }> = {
+  canon: { label: "Canon", color: "var(--green)" },
+  filler: { label: "Filler", color: "var(--blue)" },
+  mixed: { label: "Mixed", color: "var(--orange-hi)" },
+  recap: { label: "Recap", color: "var(--text-3)" },
+  unclassified: { label: "—", color: "var(--text-4)" },
+};
 function classChip(c: string) {
-  const map: Record<string, { label: string; color: string }> = {
-    canon: { label: "Canon", color: "var(--green)" },
-    filler: { label: "Filler", color: "var(--blue)" },
-    mixed: { label: "Mixed", color: "var(--orange-hi)" },
-    recap: { label: "Recap", color: "var(--text-3)" },
-    unclassified: { label: "—", color: "var(--text-4)" },
-  };
-  return map[c] ?? map.unclassified;
+  return CLASS_META[c] ?? CLASS_META.unclassified;
+}
+
+/** Compact "3 filler · 1 mixed" line for an arc header. Canon is the silent
+ *  default — we only call out what's skippable/notable, so all-canon arcs read
+ *  "All canon" and don't clutter. */
+function CountBadges({ c }: { c: ClassCounts }) {
+  if (!c) return null;
+  if (c.filler === 0 && c.mixed === 0 && c.recap === 0) {
+    return <span style={{ fontSize: 11, color: "var(--text-3)" }}>All canon</span>;
+  }
+  const dot = (color: string) => ({ display: "inline-block", width: 6, height: 6, borderRadius: 9, background: color, marginRight: 5 } as const);
+  return (
+    <span style={{ display: "inline-flex", gap: 12, fontSize: 11, alignItems: "center", flexWrap: "wrap" }}>
+      {c.filler > 0 && <span style={{ color: "var(--blue)" }}><i style={dot("var(--blue)")} />{c.filler} filler</span>}
+      {c.mixed > 0 && <span style={{ color: "var(--orange-hi)" }}><i style={dot("var(--orange-hi)")} />{c.mixed} mixed</span>}
+      {c.recap > 0 && <span style={{ color: "var(--text-3)" }}><i style={dot("var(--text-3)")} />{c.recap} recap</span>}
+    </span>
+  );
 }
 
 function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean; onToggle: () => void }) {
@@ -63,8 +81,9 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
           <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, filter: fut ? "blur(5px)" : "none", userSelect: fut ? "none" : "auto" }}>
             {fut ? "Uncharted island" : arc.island}
           </div>
-          <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2 }}>
-            {arc.saga} · Ep {arc.start}–{arc.end}
+          <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <span>{arc.saga} · Ep {arc.start}–{arc.end}</span>
+            {!fut && <CountBadges c={arc.classCounts} />}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -84,6 +103,16 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
             <button className="btn btn-sm btn-ghost" onClick={() => markRange(arc.start, arc.end, "unwatched")}>
               <Icon name="circle" size={14} /> Clear arc
             </button>
+            {arc.classCounts.filler > 0 && (
+              <button
+                className="btn btn-sm btn-ghost"
+                disabled={!eps}
+                title="Mark every filler episode in this island as skipped"
+                onClick={() => (eps ?? []).forEach((e) => e.classification === "filler" && markSkipped(e.number))}
+              >
+                <Icon name="skip-forward" size={14} color="var(--blue)" /> Skip filler ({arc.classCounts.filler})
+              </button>
+            )}
           </div>
           <div>
             {(eps ?? []).map((e) => {
@@ -92,6 +121,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
               const meta = STATE_META[st];
               const cc = classChip(e.classification);
               const atBoundary = e.number === ep;
+              const isCanon = e.classification === "canon" || e.classification === "unclassified";
               return (
                 <div key={e.number} style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 20px", borderTop: "1px solid var(--line)", background: atBoundary ? "var(--orange-faint)" : "transparent" }}>
                   <button onClick={() => cycle(e.number)} title={meta.label + " — click to change"} style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid var(--line-2)", background: "var(--surface-2)", cursor: "pointer", display: "grid", placeItems: "center" }}>
@@ -101,8 +131,14 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
                     {/* fogged label — never a real episode title */}
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 13.5, color: st === "unwatched" ? "var(--text-2)" : "var(--text)" }}>{e.label}</span>
                     {atBoundary && <span style={{ marginLeft: 10, fontFamily: "var(--font-mono)", fontSize: 9.5, letterSpacing: "1px", color: "var(--orange-hi)" }}>YOU ARE HERE</span>}
+                    {e.classification === "filler" && <span style={{ marginLeft: 10, fontSize: 10.5, color: "var(--text-3)" }}>skippable</span>}
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: cc.color }}>{cc.label}</span>
+                  {/* canon stays a quiet label; filler/mixed/recap get a colored pill so they pop */}
+                  {isCanon ? (
+                    <span style={{ fontSize: 11, fontWeight: 600, color: cc.color }}>{cc.label}</span>
+                  ) : (
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: cc.color, border: `1px solid ${cc.color}`, borderRadius: 999, padding: "2px 9px", letterSpacing: ".3px" }}>{cc.label}</span>
+                  )}
                   <button onClick={() => markUpTo(e.number)} className="chip" style={{ cursor: "pointer", fontSize: 11 }} title="Mark everything up to here watched">
                     <Icon name="check" size={11} /> up to here
                   </button>
@@ -130,6 +166,11 @@ export function EpisodeTracker() {
   const marked = Object.values(states).filter((s) => s === "watched" || s === "skipped" || s === "rewatching").length;
   const pct = Math.round((marked / maxEp) * 100);
 
+  // skip-planning totals across the charted voyage (reveal-ahead-safe counts)
+  const arcs = journey?.arcs ?? [];
+  const totalFiller = arcs.reduce((n, a) => n + (a.classCounts?.filler ?? 0), 0);
+  const totalMixed = arcs.reduce((n, a) => n + (a.classCounts?.mixed ?? 0), 0);
+
   return (
     <SeaChart>
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: isMobile ? "12px 14px 32px" : "16px 32px 80px" }}>
@@ -138,9 +179,9 @@ export function EpisodeTracker() {
             <Eyebrow>Episode log</Eyebrow>
             <h1 style={{ fontSize: "clamp(26px,3vw,38px)" }}>Track every episode</h1>
           </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <Chip active={canonOnly} onClick={() => setCanonOnly(!canonOnly)}>
-              <Icon name="filter" size={13} /> Canon only
+              <Icon name="filter" size={13} /> Canon only{totalFiller > 0 ? ` · hides ${totalFiller}` : ""}
             </Chip>
             <span className="chip"><Icon name="check-check" size={13} color="var(--green)" /> {marked} marked</span>
           </div>
@@ -162,6 +203,12 @@ export function EpisodeTracker() {
               <div style={{ fontSize: 11.5, color: "var(--text-3)" }}>of {maxEp} episodes</div>
             </div>
           </div>
+          {totalFiller > 0 && (
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--line)", fontSize: 12.5, color: "var(--text-3)", display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+              <Icon name="skip-forward" size={14} color="var(--blue)" />
+              <span><strong style={{ color: "var(--text-2)" }}>{totalFiller}</strong> filler{totalMixed > 0 ? <> · <strong style={{ color: "var(--text-2)" }}>{totalMixed}</strong> mixed</> : null} across the charted voyage — toggle <em>Canon only</em> to hide filler, or skip per island below.</span>
+            </div>
+          )}
         </Card>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

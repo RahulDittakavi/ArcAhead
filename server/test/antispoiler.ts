@@ -110,8 +110,8 @@ function payloadsAt(ep: number): Record<string, unknown> {
   for (const a of arcs) if (a.start <= ep) { reached.add(a.name); reached.add(a.island); }
   return {
     journey: buildJourney(arcs, ep, total),
-    arcsList: arcs.map((a) => toArcDto(a, ep)),
-    arcDetails: arcs.map((a) => toArcDto(a, ep)),
+    arcsList: arcs.map((a) => toArcDto(a, ep, kb.classCounts(a.start, a.end, a.kind))),
+    arcDetails: arcs.map((a) => toArcDto(a, ep, kb.classCounts(a.start, a.end, a.kind))),
     charactersList: characters.map((c) => toCharacterDto(c, ep)),
     characterDetails: characters.map((c) => toCharacterDto(c, ep)),
     milestones: milestones.map((m) => toMilestoneDto(m, ep)),
@@ -138,11 +138,16 @@ for (const ep of boundaries) {
 // ---- 2. structural checks ----
 {
   const ep = 381;
-  // future arc carries no gated keys
-  const wano = toArcDto(kb.arc("wano")!, ep) as Record<string, unknown>;
+  // future arc carries no gated keys — but DOES carry reveal-ahead classCounts
+  const wano = toArcDto(kb.arc("wano")!, ep, kb.classCounts(890, 1085, "canon")) as Record<string, unknown>;
   for (const k of ["summary", "moments", "rating", "banner", "kind"]) {
     if (k in wano) fail(`structural: future arc 'wano' still has key '${k}' @ep${ep}`);
   }
+  if (!wano.classCounts) fail("structural: future arc 'wano' missing reveal-ahead classCounts");
+  // counts cover the whole range and reflect the overlay
+  const ec = kb.classCounts(45, 67, "canon"); // spans 45-47 mixed, 54-60 filler, 61 mixed
+  if (ec.canon + ec.filler + ec.mixed + ec.recap !== 23) fail(`structural: classCounts don't sum to range size (got ${JSON.stringify(ec)})`);
+  if (ec.filler !== 7 || ec.mixed !== 4) fail(`structural: classCounts wrong for 45-67 (got ${JSON.stringify(ec)})`);
   // unmet character: only safe identity, no bio
   const brook = toCharacterDto(kb.character("brook")!, 100) as Record<string, unknown>;
   if (brook.introduced !== false) fail("structural: brook should be introduced:false @ep100");

@@ -20,6 +20,17 @@ export type ArcStatus = "done" | "current" | "future";
  *  honestly answer "is this filler?" without fabricating anything. */
 export type ArcKind = "canon" | "filler" | "mixed";
 
+/** Per-arc tally of episode classifications. Derived from the episode-class
+ *  overlay + the arc's default `kind`. Reveal-ahead-safe (counts of filler carry
+ *  no plot), so it's sent for every arc — including future ones — to power
+ *  skip-planning ("this island has 3 filler episodes"). */
+export interface ClassCounts {
+  canon: number;
+  filler: number;
+  mixed: number;
+  recap: number;
+}
+
 // ---------------------------------------------------------------------------
 // Series
 // ---------------------------------------------------------------------------
@@ -72,6 +83,9 @@ export interface ArcDto {
   status: ArcStatus;
   hype: number;
   hasBanner: boolean;
+  /** classification tally for the arc's episode range (reveal-ahead-safe; sent
+   *  for future arcs too so users can see filler ahead and skip-plan) */
+  classCounts: ClassCounts;
   // present only when status !== "future" (knowing a fogged arc's kind/summary
   // would leak that it exists and what it is)
   summary?: string;

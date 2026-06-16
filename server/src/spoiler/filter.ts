@@ -16,6 +16,7 @@ import type {
   MilestoneStatus,
   EpisodeDto,
   EpisodeClassification,
+  ClassCounts,
 } from "@arcahead/shared";
 import { hypeFor } from "./hype.js";
 
@@ -26,8 +27,10 @@ export function arcStatus(ep: number, arc: Pick<ArcRecord, "start" | "end">): Ar
 }
 
 /** Convert a full Arc record into a wire-safe DTO for the given episode.
- *  Future arcs lose summary / moments / rating / banner entirely. */
-export function toArcDto(arc: ArcRecord, ep: number): ArcDto {
+ *  Future arcs lose summary / moments / rating / banner entirely.
+ *  `classCounts` is reveal-ahead-safe and computed by the caller (it needs the
+ *  episode-class overlay, which the gate intentionally doesn't import). */
+export function toArcDto(arc: ArcRecord, ep: number, classCounts: ClassCounts): ArcDto {
   const status = arcStatus(ep, arc);
   const base: ArcDto = {
     id: arc.id,
@@ -40,6 +43,7 @@ export function toArcDto(arc: ArcRecord, ep: number): ArcDto {
     status,
     hype: hypeFor(arc.id),
     hasBanner: !!arc.banner,
+    classCounts,
   };
   if (status === "future") return base; // fogged: no plot payload crosses the wire
   return {

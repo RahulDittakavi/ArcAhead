@@ -16,6 +16,8 @@ import type {
   MilestoneRecord,
   EpisodeClassRecord,
   EpisodeClassification,
+  ArcKind,
+  ClassCounts,
 } from "@arcahead/shared";
 import {
   ArcsFileSchema,
@@ -127,8 +129,15 @@ export const kb = {
   /** Episode-level classification OVERRIDE for episode `n`, or null if no
    *  overlay entry covers it (caller falls back to the arc's `kind`). Ranges are
    *  validated disjoint at boot, so the first containing range is authoritative. */
-  episodeClass(n: number): EpisodeClassification | null {
+  episodeClass(n: number): Exclude<EpisodeClassification, "unclassified"> | null {
     const hit = episodeClassSorted.find((e) => e.from <= n && n <= e.to);
     return hit ? hit.classification : null;
+  },
+  /** Tally classifications across [start,end], using the overlay where present
+   *  and the arc's `defaultKind` otherwise. Powers per-arc skip-planning. */
+  classCounts(start: number, end: number, defaultKind: ArcKind): ClassCounts {
+    const c: ClassCounts = { canon: 0, filler: 0, mixed: 0, recap: 0 };
+    for (let n = start; n <= end; n++) c[this.episodeClass(n) ?? defaultKind]++;
+    return c;
   },
 };

@@ -4,6 +4,7 @@
    ============================================================================ */
 import type { ArcRecord, JourneyDto, ArcDto } from "@arcahead/shared";
 import { toArcDto } from "./filter.js";
+import { kb } from "../kb/index.js";
 
 /**
  * @param arcs    all arcs for the series, ANY order (sorted here by start)
@@ -12,7 +13,7 @@ import { toArcDto } from "./filter.js";
  */
 export function buildJourney(arcs: ArcRecord[], ep: number, total: number): JourneyDto {
   const ordered = [...arcs].sort((a, b) => a.start - b.start);
-  const dtos: ArcDto[] = ordered.map((a) => toArcDto(a, ep));
+  const dtos: ArcDto[] = ordered.map((a) => toArcDto(a, ep, kb.classCounts(a.start, a.end, a.kind)));
 
   const doneArcs = dtos.filter((a) => a.status === "done");
   const current =
