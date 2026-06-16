@@ -15,6 +15,7 @@
     "build": "npm run build:shared && npm run build:web && npm run build:server",
     "start": "node server/dist/index.js",
     "test": "npm run test --workspace server",
+    "sync:kb": "npm run sync:kb --workspace server --",
     "dev:server": "npm run dev --workspace server",
     "dev:web": "npm run dev --workspace web"
   }
