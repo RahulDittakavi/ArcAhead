@@ -43,7 +43,7 @@ export function Landing() {
       </div>
 
       <header style={{ position: "relative", zIndex: 3, maxWidth: "var(--maxw)", margin: "0 auto", padding: "26px 32px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Logo />
+        <Logo onClick={() => go("catalog")} />
         <nav style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 30 }}>
           {!isMobile && (
             <>

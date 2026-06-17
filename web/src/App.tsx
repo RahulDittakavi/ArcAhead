@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavContext, type Nav, type Screen } from "./lib/nav";
 import { AppLayout } from "./layout/AppLayout";
+import { Catalog } from "./screens/Catalog/Catalog";
 import { Landing } from "./screens/Landing/Landing";
 import { ProgressSetup } from "./screens/Setup/ProgressSetup";
 import { Dashboard } from "./screens/Dashboard/Dashboard";
@@ -13,7 +14,7 @@ import { Settings } from "./screens/Settings/Settings";
 const SERIES_TITLE = "One Piece"; // single tracked title for this build
 
 export function App() {
-  const [screen, setScreen] = useState<Screen>("landing");
+  const [screen, setScreen] = useState<Screen>("catalog");
   const [selArcId, setSelArcId] = useState<string | null>(null);
   const [selCharId, setSelCharId] = useState<string | null>(null);
 
@@ -37,6 +38,13 @@ export function App() {
 
   const nav: Nav = { screen, go, openArc, openChar, selArcId, selCharId };
 
+  if (screen === "catalog") {
+    return (
+      <NavContext.Provider value={nav}>
+        <Catalog />
+      </NavContext.Provider>
+    );
+  }
   if (screen === "landing") {
     return (
       <NavContext.Provider value={nav}>

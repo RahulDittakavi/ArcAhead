@@ -27,7 +27,7 @@ export function Sidebar() {
       }}
     >
       <div style={{ padding: "0 8px 24px" }}>
-        <Logo size={26} onClick={() => go("landing")} />
+        <Logo size={26} onClick={() => go("catalog")} />
       </div>
       <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {items.map((it) => {
