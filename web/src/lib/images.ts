@@ -36,6 +36,10 @@ export const IMAGES: Record<string, ImageMeta> = {
   SANJI_CHARACTER_IMAGE: { src: "/uploads/sanji.jpg", type: "Portrait — cook", dims: "900 × 1100", where: "Bounty poster / detail" },
   ROBIN_CHARACTER_IMAGE: { src: "/uploads/robin.jpg", type: "Portrait — archaeologist", dims: "900 × 1100", where: "Bounty poster / detail" },
   CHOPPER_CHARACTER_IMAGE: { src: "/uploads/chopper.jpg", type: "Portrait — doctor", dims: "900 × 1100", where: "Bounty poster / detail" },
+  USOPP_CHARACTER_IMAGE: { src: "/uploads/ussop.jpg", type: "Portrait — sniper", dims: "900 × 1100", where: "Bounty poster / detail" },
+  FRANKY_CHARACTER_IMAGE: { src: "/uploads/franky.jpg", type: "Portrait — shipwright", dims: "900 × 1100", where: "Bounty poster / detail" },
+  BROOK_CHARACTER_IMAGE: { src: "/uploads/brook.jpg", type: "Portrait — musician", dims: "900 × 1100", where: "Bounty poster / detail" },
+  JINBE_CHARACTER_IMAGE: { src: "/uploads/jinbei.jpg", type: "Portrait — helmsman", dims: "900 × 1100", where: "Bounty poster / detail" },
 
   ARC_BANNER_ALABASTA: { src: "/uploads/alabasta.jpg", type: "Arc key art — desert kingdom", dims: "1600 × 900 (16:9)", where: "Arc card / hero" },
   ARC_BANNER_ENIES_LOBBY: { src: "/uploads/enies-lobby.jpg", type: "Arc key art — fortress island", dims: "1600 × 900 (16:9)", where: "Arc card / hero" },
@@ -59,4 +63,8 @@ export const CHAR_IMAGE: Record<string, string> = {
   sanji: "SANJI_CHARACTER_IMAGE",
   robin: "ROBIN_CHARACTER_IMAGE",
   chopper: "CHOPPER_CHARACTER_IMAGE",
+  usopp: "USOPP_CHARACTER_IMAGE",
+  franky: "FRANKY_CHARACTER_IMAGE",
+  brook: "BROOK_CHARACTER_IMAGE",
+  jinbe: "JINBE_CHARACTER_IMAGE",
 };

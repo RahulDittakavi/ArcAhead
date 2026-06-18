@@ -118,6 +118,14 @@ export interface LockedFactRecord {
   hint: string;
 }
 
+/** A bounty as it appeared on a wanted poster, with the episode it was revealed.
+ *  The DTO surfaces only the latest bounty at or before the viewer's episode, so
+ *  a future (higher) bounty never leaks the events that earned it. */
+export interface BountyRecord {
+  ep: number;
+  amount: number;
+}
+
 export interface CharacterRecord {
   id: string;
   seriesId: string;
@@ -125,7 +133,10 @@ export interface CharacterRecord {
   epithet: string | null;
   img: string | null;
   crew: boolean;
+  /** Legacy single bounty (fallback when `bounties` is empty, e.g. non-crew). */
   bounty: string | null;
+  /** Episode-stamped bounty history; resolved as-of the viewer's episode. */
+  bounties: BountyRecord[];
   epaffirst: number;
   hue: number;
   role: string;
@@ -147,21 +158,23 @@ export interface LockedFactDto {
 /**
  * Spoiler-filtered character.
  * - If the character is not yet introduced (epaffirst > ep), `introduced` is
- *   false and the bio payload is omitted — only name + epaffirst are sent.
- * - `locked` always lists every gated fact as a sealed stub (the prototype has
- *   no post-unlock payload, so unlocking just marks it reached).
+ *   false and EVERYTHING but name + epaffirst is withheld — no epithet, portrait,
+ *   bounty, or bio crosses the wire, so an unmet character can't be previewed.
+ * - `bounty` is the latest poster value at or before the viewer's episode (an
+ *   introduced character with no poster yet sends no bounty).
+ * - `locked` always lists every gated fact as a sealed stub.
  */
 export interface CharacterDto {
   id: string;
   name: string;
-  epithet: string | null;
-  img: string | null;
-  crew: boolean;
-  bounty: string | null;
   epaffirst: number;
   hue: number;
+  crew: boolean;
   introduced: boolean;
   // present only when introduced
+  epithet?: string | null;
+  img?: string | null;
+  bounty?: string | null;
   role?: string;
   affil?: string;
   overview?: string;

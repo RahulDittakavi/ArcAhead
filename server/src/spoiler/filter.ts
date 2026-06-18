@@ -56,25 +56,48 @@ export function toArcDto(arc: ArcRecord, ep: number, classCounts: ClassCounts): 
   };
 }
 
+/** Format a belly amount with thousands separators (e.g. 30000000 → "30,000,000"). */
+function formatBelly(n: number): string {
+  return n.toLocaleString("en-US");
+}
+
+/** The bounty as known to the viewer at episode `ep`: the HIGHEST poster value
+ *  among those revealed so far (b.ep <= ep). Using the max — not the most-recent
+ *  reveal — is deliberate: an old, lower bounty can be re-shown later in a
+ *  flashback (e.g. Jinbe's rookie poster), and that must not look like a
+ *  downgrade. In-story bounties only climb, so the max of revealed posters is the
+ *  current known bounty. Returns null if no poster has been revealed yet. Falls
+ *  back to the legacy static bounty when there's no episode-stamped history. */
+function bountyAsOf(char: CharacterRecord, ep: number): string | null {
+  if (char.bounties && char.bounties.length) {
+    const revealed = char.bounties.filter((b) => b.ep <= ep);
+    if (!revealed.length) return null;
+    const top = revealed.reduce((a, b) => (b.amount >= a.amount ? b : a));
+    return formatBelly(top.amount);
+  }
+  return char.bounty;
+}
+
 /** Convert a full Character record into a wire-safe DTO for the given episode.
- *  Not-yet-introduced characters reveal only name + first-appearance episode.
- *  Locked facts are always sealed stubs (title + hint + unlockEp). */
+ *  A not-yet-introduced character reveals ONLY name + first-appearance episode —
+ *  no epithet, portrait, bounty, or bio crosses the wire. Locked facts are
+ *  always sealed stubs (title + hint + unlockEp). */
 export function toCharacterDto(char: CharacterRecord, ep: number): CharacterDto {
   const introduced = char.epaffirst <= ep;
   const base: CharacterDto = {
     id: char.id,
     name: char.name,
-    epithet: char.epithet,
-    img: char.img,
-    crew: char.crew,
-    bounty: char.bounty,
     epaffirst: char.epaffirst,
     hue: char.hue,
+    crew: char.crew,
     introduced,
   };
   if (!introduced) return base;
   return {
     ...base,
+    epithet: char.epithet,
+    img: char.img,
+    bounty: bountyAsOf(char, ep),
     role: char.role,
     affil: char.affil,
     overview: char.overview,

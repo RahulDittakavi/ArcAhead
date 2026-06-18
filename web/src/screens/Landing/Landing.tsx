@@ -29,7 +29,8 @@ export function Landing() {
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
   const { data: arcs } = useApi(() => api.arcs(ep), [ep]);
 
-  const crew = (chars ?? []).filter((c) => c.crew);
+  // only crew you've already met — an unintroduced member never previews here
+  const crew = (chars ?? []).filter((c) => c.crew && c.introduced);
   const highlightArcs = HIGHLIGHT_ARC_IDS.map((id) => (arcs ?? []).find((a) => a.id === id)).filter(Boolean) as NonNullable<typeof arcs>;
 
   return (

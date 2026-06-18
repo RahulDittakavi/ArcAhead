@@ -56,6 +56,11 @@ export const LockedFactSchema = z.object({
   hint: z.string(),
 });
 
+export const BountySchema = z.object({
+  ep: z.number().int().positive(),
+  amount: z.number().int().nonnegative(),
+});
+
 export const CharacterSchema = z.object({
   id: z.string(),
   seriesId: z.string(),
@@ -64,6 +69,7 @@ export const CharacterSchema = z.object({
   img: z.string().nullable(),
   crew: z.boolean(),
   bounty: z.string().nullable(),
+  bounties: z.array(BountySchema).default([]),
   epaffirst: z.number().int().positive(),
   hue: z.number(),
   role: z.string(),

@@ -44,15 +44,21 @@ function secretSet(ep: number): { value: string; from: string }[] {
       add(a.banner, `arc ${a.id}.banner`);
     }
   }
-  // not-yet-introduced characters (epaffirst > ep): bio payload gated
+  // not-yet-introduced characters (epaffirst > ep): EVERYTHING but name/epaffirst gated
   for (const c of characters) {
     if (c.epaffirst > ep) {
+      add(c.epithet, `char ${c.id}.epithet`);
       add(c.overview, `char ${c.id}.overview`);
       add(c.role, `char ${c.id}.role`);
       add(c.affil, `char ${c.id}.affil`);
       c.affiliations.forEach((x, i) => add(x, `char ${c.id}.affiliations[${i}]`));
       c.appearances.forEach((x, i) => add(x, `char ${c.id}.appearances[${i}]`));
       c.relationships.forEach((x, i) => add(x, `char ${c.id}.relationships[${i}]`));
+    }
+    // bounties revealed in a LATER episode must never appear (a future, higher
+    // bounty would betray events the viewer hasn't reached) — even once introduced
+    for (const b of c.bounties ?? []) {
+      if (b.ep > ep) add(b.amount.toLocaleString("en-US"), `char ${c.id}.bounty@ep${b.ep}`);
     }
   }
   // milestones: safeRecap withheld until PASSED (reached); title/reward gated while future
@@ -87,9 +93,12 @@ function allowedSet(ep: number): Set<string> {
     if (a.start <= ep) { A(a.summary); a.moments.forEach(A); A(a.banner); }
   }
   for (const c of characters) {
-    A(c.name); A(c.epithet); A(c.bounty);
+    A(c.name); // name is always shown (even for sealed/unmet characters)
     c.locked.forEach((l) => { A(l.title); A(l.hint); }); // sealed stubs are always shown
     if (c.epaffirst <= ep) {
+      A(c.epithet);
+      if (!(c.bounties && c.bounties.length)) A(c.bounty); // legacy static, only when no history
+      for (const b of c.bounties ?? []) if (b.ep <= ep) A(b.amount.toLocaleString("en-US")); // revealed bounties
       A(c.overview); A(c.role); A(c.affil);
       c.affiliations.forEach(A); c.appearances.forEach(A); c.relationships.forEach(A);
     }
