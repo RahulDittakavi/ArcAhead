@@ -124,7 +124,7 @@ function payloadsAt(ep: number): Record<string, unknown> {
 }
 
 // ---- 1. property sweep: no secret appears in any payload ----
-const boundaries = [1, 30, 50, 92, 130, 200, 381, 405, 500, 900, 1085, 1122];
+const boundaries = [1, 30, 50, 92, 130, 200, 381, 405, 500, 575, 700, 889, 900, 1085, 1100, 1166];
 for (const ep of boundaries) {
   const secrets = secretSet(ep);
   const payloads = payloadsAt(ep);

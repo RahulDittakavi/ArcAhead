@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { deriveBoundary, type EpisodeState } from "@arcahead/shared";
+import { api } from "./api";
 
 /* Episode-level tracker state — the real "tracker".
 
@@ -75,7 +76,17 @@ function loadTs(): TsMap {
   }
 }
 
-export function EpisodeProvider({ children, maxEp = 1122 }: { children: ReactNode; maxEp?: number }) {
+export function EpisodeProvider({ children, maxEp: maxEpFallback = 1122 }: { children: ReactNode; maxEp?: number }) {
+  // The frontier (total aired episodes) is owned by the server KB (timeline.json,
+  // authored via the sheet). Fetch it so "content currency" propagates from one
+  // place; the prop is just the pre-fetch fallback.
+  const [maxEp, setMaxEp] = useState(maxEpFallback);
+  useEffect(() => {
+    let alive = true;
+    api.series().then((s) => { if (alive && s?.episodes) setMaxEp(s.episodes); }).catch(() => { /* keep fallback */ });
+    return () => { alive = false; };
+  }, []);
+
   const [states, setStates] = useState<StateMap>(() => loadStates() ?? seedDefault());
   const [ts, setTs] = useState<TsMap>(() => loadTs());
   const [canonOnly, setCanonOnlyState] = useState<boolean>(() => {
