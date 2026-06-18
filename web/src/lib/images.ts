@@ -43,6 +43,12 @@ export const IMAGES: Record<string, ImageMeta> = {
   ARC_BANNER_WANO: { src: "/uploads/wano.jpg", type: "Arc key art — distant island", dims: "1600 × 900 (16:9)", where: "Arc card / hero" },
 
   SHIP_PROGRESS_IMAGE: { src: "/uploads/ship.png", type: "Ship sprite, transparent PNG", dims: "640 × 480", where: "Progress marker" },
+
+  // Series title logos (transparent PNG) for the catalog cards.
+  SERIES_LOGO_ONE_PIECE: { src: "/uploads/one-piece.png", type: "Series logo (transparent)", dims: "~1085 × 672", where: "Catalog card" },
+  SERIES_LOGO_NARUTO: { src: "/uploads/naruto.png", type: "Series logo (transparent)", dims: "~677 × 700", where: "Catalog card" },
+  SERIES_LOGO_BLEACH: { src: "/uploads/bleach.png", type: "Series logo (transparent)", dims: "~503 × 111", where: "Catalog card" },
+  SERIES_LOGO_JOJO: { src: "/uploads/jojo.png", type: "Series logo (transparent)", dims: "~988 × 611", where: "Catalog card" },
 };
 
 /** Map a character id → its portrait registry key (matches seed `img`). */
