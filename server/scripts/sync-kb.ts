@@ -69,7 +69,7 @@ type Getter = (r: string[], c: string) => string;
 
 const ARC_COLUMNS = [
   "id", "name", "island", "saga", "start", "end",
-  "kind", "rating", "watch", "future", "banner", "moments", "summary",
+  "kind", "watch", "future", "banner", "moments", "summary",
 ] as const;
 
 const FILLER_COLUMNS = ["from", "to", "classification", "note"] as const;
@@ -97,7 +97,6 @@ const TARGETS: Record<string, Target> = {
           saga: get(r, "saga"),
           start: num("start"),
           end: num("end"),
-          rating: num("rating"),
           kind: get(r, "kind"), // validated against the enum by Zod
           summary: get(r, "summary"),
           moments: get(r, "moments").split("|").map((s) => s.trim()).filter(Boolean),
@@ -109,7 +108,7 @@ const TARGETS: Record<string, Target> = {
     },
     toCells: (a) => ({
       id: str(a.id), name: str(a.name), island: str(a.island), saga: str(a.saga),
-      start: str(a.start), end: str(a.end), kind: str(a.kind), rating: str(a.rating),
+      start: str(a.start), end: str(a.end), kind: str(a.kind),
       watch: str(a.watch), future: str(a.future), banner: a.banner == null ? "" : str(a.banner),
       moments: (a.moments as string[]).join(" | "), summary: str(a.summary),
     }),

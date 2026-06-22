@@ -27,7 +27,7 @@ export function arcStatus(ep: number, arc: Pick<ArcRecord, "start" | "end">): Ar
 }
 
 /** Convert a full Arc record into a wire-safe DTO for the given episode.
- *  Future arcs lose summary / moments / rating / banner entirely.
+ *  Future arcs lose summary / moments / banner entirely.
  *  `classCounts` is reveal-ahead-safe and computed by the caller (it needs the
  *  episode-class overlay, which the gate intentionally doesn't import). */
 export function toArcDto(arc: ArcRecord, ep: number, classCounts: ClassCounts): ArcDto {
@@ -50,7 +50,6 @@ export function toArcDto(arc: ArcRecord, ep: number, classCounts: ClassCounts): 
     ...base,
     summary: arc.summary,
     moments: arc.moments,
-    rating: arc.rating,
     banner: arc.banner,
     kind: arc.kind, // safe to reveal for reached/current arcs ("is this filler?")
   };
@@ -93,9 +92,11 @@ export function toCharacterDto(char: CharacterRecord, ep: number): CharacterDto 
     introduced,
   };
   if (!introduced) return base;
+  // an epithet can be gated past first appearance (acquired later / would spoil)
+  const epithetShown = ep >= (char.epithetEp ?? char.epaffirst);
   return {
     ...base,
-    epithet: char.epithet,
+    epithet: epithetShown ? char.epithet : null,
     img: char.img,
     bounty: bountyAsOf(char, ep),
     role: char.role,

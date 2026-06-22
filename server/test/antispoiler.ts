@@ -46,8 +46,10 @@ function secretSet(ep: number): { value: string; from: string }[] {
   }
   // not-yet-introduced characters (epaffirst > ep): EVERYTHING but name/epaffirst gated
   for (const c of characters) {
+    // an epithet can be gated to a LATER episode than first appearance (acquired
+    // later / would spoil) — it's a secret until ep reaches epithetEp
+    if (ep < (c.epithetEp ?? c.epaffirst)) add(c.epithet, `char ${c.id}.epithet`);
     if (c.epaffirst > ep) {
-      add(c.epithet, `char ${c.id}.epithet`);
       add(c.overview, `char ${c.id}.overview`);
       add(c.role, `char ${c.id}.role`);
       add(c.affil, `char ${c.id}.affil`);
@@ -95,8 +97,8 @@ function allowedSet(ep: number): Set<string> {
   for (const c of characters) {
     A(c.name); // name is always shown (even for sealed/unmet characters)
     c.locked.forEach((l) => { A(l.title); A(l.hint); }); // sealed stubs are always shown
+    if (ep >= (c.epithetEp ?? c.epaffirst)) A(c.epithet); // epithet shown only once its reveal ep is reached
     if (c.epaffirst <= ep) {
-      A(c.epithet);
       if (!(c.bounties && c.bounties.length)) A(c.bounty); // legacy static, only when no history
       for (const b of c.bounties ?? []) if (b.ep <= ep) A(b.amount.toLocaleString("en-US")); // revealed bounties
       A(c.overview); A(c.role); A(c.affil);

@@ -89,7 +89,6 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
               {isFuture ? "This island is still beyond your log pose. Sail on to lift the fog." : full.summary}
             </p>
             <div style={{ display: "flex", gap: 20, marginTop: 22, flexWrap: "wrap" }}>
-              <HeroStat icon="star" label="Crew rating" value={isFuture || full.rating == null ? "—" : full.rating.toFixed(1) + "/10"} />
               <HeroStat icon="clock" label="Sea time" value={full.watch} />
               <HeroStat icon="activity" label="Hype" value={full.hype + "/100"} />
               <HeroStat icon="users" label="Crew aboard" value={isFuture ? "??" : charsHere.length + "+"} />

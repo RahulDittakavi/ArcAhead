@@ -58,8 +58,8 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
             <p style={{ color: "var(--text-2)", fontSize: 13.5, lineHeight: 1.5, marginBottom: 16 }}>{series?.tagline ?? ""}</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               <span className="chip">{episodes} episodes</span>
-              <span className="chip"><Icon name="users" size={12} /> {((series?.tracked ?? 0) / 1000).toFixed(0)}k aboard</span>
-              <span className="chip"><Icon name="star" size={12} color="var(--orange-hi)" /> {((series?.score ?? 0) / 10).toFixed(1)}</span>
+              <span className="chip">{series?.year ?? ""}</span>
+              <span className="chip">{series?.tag ?? ""}</span>
             </div>
             <div style={{ marginTop: 18, padding: "12px 14px", borderRadius: 12, background: "var(--orange-faint)", border: "1px solid color-mix(in oklab, var(--orange) 30%, transparent)", display: "flex", alignItems: "center", gap: 10, fontSize: 12.5, color: "var(--orange-hi)" }}>
               <Icon name="compass" size={16} /> One Piece — the only voyage, for now.

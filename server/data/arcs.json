@@ -7,11 +7,14 @@
     "saga": "East Blue",
     "start": 1,
     "end": 3,
-    "rating": 8.1,
     "kind": "canon",
     "summary": "Where the journey begins and a captain sets out with a single, unshakable promise.",
-    "moments": ["The first crew member joins", "A promise made under open sky", "Setting sail for the first time"],
-    "watch": "1h 10m",
+    "moments": [
+      "The first crew member joins",
+      "A promise made under open sky",
+      "Setting sail for the first time"
+    ],
+    "watch": "1h 12m",
     "future": false,
     "banner": null
   },
@@ -23,11 +26,14 @@
     "saga": "East Blue",
     "start": 4,
     "end": 8,
-    "rating": 7.6,
     "kind": "canon",
     "summary": "A quiet town meets a loud crew, and a fight breaks out over the price of pride.",
-    "moments": ["A daring rooftop rescue", "An unlikely alliance", "A clown's grand entrance"],
-    "watch": "1h 55m",
+    "moments": [
+      "A daring rooftop rescue",
+      "An unlikely alliance",
+      "A clown's grand entrance"
+    ],
+    "watch": "2h",
     "future": false,
     "banner": null
   },
@@ -39,11 +45,14 @@
     "saga": "East Blue",
     "start": 9,
     "end": 18,
-    "rating": 8.0,
     "kind": "canon",
     "summary": "A village on a cliff, a boy who cries wolf, and a ship worth defending.",
-    "moments": ["A slope battle at dawn", "A new crewmate's true colors", "The crew earns a vessel"],
-    "watch": "3h 50m",
+    "moments": [
+      "A slope battle at dawn",
+      "A new crewmate's true colors",
+      "The crew earns a vessel"
+    ],
+    "watch": "4h",
     "future": false,
     "banner": null
   },
@@ -55,11 +64,14 @@
     "saga": "East Blue",
     "start": 19,
     "end": 30,
-    "rating": 8.4,
     "kind": "canon",
     "summary": "A floating restaurant becomes a battlefield of dreams, debts, and devotion.",
-    "moments": ["A cook's impossible standard", "A duel of swordsmen", "A dream worth starving for"],
-    "watch": "4h 35m",
+    "moments": [
+      "A cook's impossible standard",
+      "A duel of swordsmen",
+      "A dream worth starving for"
+    ],
+    "watch": "4h 48m",
     "future": false,
     "banner": null
   },
@@ -71,11 +83,14 @@
     "saga": "East Blue",
     "start": 31,
     "end": 44,
-    "rating": 9.1,
     "kind": "canon",
     "summary": "A village under a long shadow, and a navigator who finally asks for help.",
-    "moments": ["The tattoo and the map room", "\"...help me.\"", "The end of a long debt"],
-    "watch": "5h 25m",
+    "moments": [
+      "The tattoo and the map room",
+      "\"...help me.\"",
+      "The end of a long debt"
+    ],
+    "watch": "5h 36m",
     "future": false,
     "banner": null
   },
@@ -87,11 +102,14 @@
     "saga": "East Blue",
     "start": 45,
     "end": 53,
-    "rating": 8.2,
     "kind": "canon",
     "summary": "The town of beginnings and endings, and the last stop before the real adventure.",
-    "moments": ["A scaffold under stormy skies", "A new weapon, a new resolve", "The gateway to the Grand Line"],
-    "watch": "3h 25m",
+    "moments": [
+      "A scaffold under stormy skies",
+      "A new weapon, a new resolve",
+      "The gateway to the Grand Line"
+    ],
+    "watch": "3h 36m",
     "future": false,
     "banner": null
   },
@@ -103,11 +121,14 @@
     "saga": "Alabasta",
     "start": 62,
     "end": 63,
-    "rating": 7.8,
     "kind": "canon",
     "summary": "The only way into the Grand Line is up — a mountain where the sea itself climbs to the clouds.",
-    "moments": ["A climb against the current", "A whale with a long memory", "The first steps onto the Grand Line"],
-    "watch": "0h 50m",
+    "moments": [
+      "A climb against the current",
+      "A whale with a long memory",
+      "The first steps onto the Grand Line"
+    ],
+    "watch": "48m",
     "future": false,
     "banner": null
   },
@@ -119,11 +140,14 @@
     "saga": "Alabasta",
     "start": 64,
     "end": 67,
-    "rating": 7.9,
     "kind": "canon",
     "summary": "A welcoming town that is not at all what it seems.",
-    "moments": ["A wine-soaked welcome", "A swordsman versus a crowd", "A secret organization revealed"],
-    "watch": "1h 30m",
+    "moments": [
+      "A wine-soaked welcome",
+      "A swordsman versus a crowd",
+      "A secret organization revealed"
+    ],
+    "watch": "1h 36m",
     "future": false,
     "banner": null
   },
@@ -135,11 +159,14 @@
     "saga": "Alabasta",
     "start": 70,
     "end": 77,
-    "rating": 8.0,
     "kind": "canon",
     "summary": "A prehistoric island where two old warriors keep a century-long promise.",
-    "moments": ["A duel that never ends", "A clash of giants", "An escape against the clock"],
-    "watch": "3h 05m",
+    "moments": [
+      "A duel that never ends",
+      "A clash of giants",
+      "An escape against the clock"
+    ],
+    "watch": "3h 12m",
     "future": false,
     "banner": null
   },
@@ -151,11 +178,14 @@
     "saga": "Alabasta",
     "start": 78,
     "end": 91,
-    "rating": 8.7,
     "kind": "canon",
     "summary": "A snowbound kingdom, a castle on a peak, and the search for a doctor.",
-    "moments": ["A climb up a frozen mountain", "A reindeer's dream", "A new crewmate joins"],
-    "watch": "5h 25m",
+    "moments": [
+      "A climb up a frozen mountain",
+      "A reindeer's dream",
+      "A new crewmate joins"
+    ],
+    "watch": "5h 36m",
     "future": false,
     "banner": null
   },
@@ -163,15 +193,18 @@
     "id": "alabasta",
     "seriesId": "one-piece",
     "name": "Alabasta",
-    "island": "Sandy Kingdom",
+    "island": "Sandy Island",
     "saga": "Alabasta",
     "start": 92,
     "end": 130,
-    "rating": 9.3,
     "kind": "canon",
     "summary": "A desert kingdom on the edge of war, and a princess fighting for her people.",
-    "moments": ["A march across the sands", "A rooftop showdown", "An X marks a vow"],
-    "watch": "15h 10m",
+    "moments": [
+      "A march across the sands",
+      "A rooftop showdown",
+      "An X marks a vow"
+    ],
+    "watch": "15h 36m",
     "future": false,
     "banner": "ARC_BANNER_ALABASTA"
   },
@@ -183,11 +216,14 @@
     "saga": "Sky Island",
     "start": 144,
     "end": 152,
-    "rating": 8.5,
     "kind": "canon",
     "summary": "A rough port town and a dreamer who believes in a city in the clouds.",
-    "moments": ["A bar full of trouble", "A liar worth believing", "A leap toward the sky"],
-    "watch": "3h 30m",
+    "moments": [
+      "A bar full of trouble",
+      "A liar worth believing",
+      "A leap toward the sky"
+    ],
+    "watch": "3h 36m",
     "future": false,
     "banner": null
   },
@@ -195,15 +231,18 @@
     "id": "skypiea",
     "seriesId": "one-piece",
     "name": "Skypiea",
-    "island": "Sky Island",
+    "island": "Skypiea",
     "saga": "Sky Island",
     "start": 153,
     "end": 195,
-    "rating": 9.0,
     "kind": "canon",
     "summary": "An island in the heavens, an ancient bell, and a story written in gold.",
-    "moments": ["Arrival above the clouds", "A bell that rings for an explorer", "A 400-year-old dream"],
-    "watch": "16h 40m",
+    "moments": [
+      "Arrival above the clouds",
+      "A bell that rings for an explorer",
+      "A 400-year-old dream"
+    ],
+    "watch": "17h 12m",
     "future": false,
     "banner": null
   },
@@ -211,15 +250,18 @@
     "id": "long-ring",
     "seriesId": "one-piece",
     "name": "Long Ring Long Land",
-    "island": "Long Ring Land",
+    "island": "Long Ring Long Land",
     "saga": "Water 7",
     "start": 207,
     "end": 219,
-    "rating": 7.7,
     "kind": "canon",
     "summary": "A stretched-out island and a contest where more than treasure is on the line.",
-    "moments": ["A strange long-legged land", "A race against rivals", "A captain's gamble"],
-    "watch": "5h 05m",
+    "moments": [
+      "A strange long-legged land",
+      "A race against rivals",
+      "A captain's gamble"
+    ],
+    "watch": "5h 12m",
     "future": false,
     "banner": null
   },
@@ -231,11 +273,14 @@
     "saga": "Water 7",
     "start": 229,
     "end": 263,
-    "rating": 9.2,
     "kind": "canon",
     "summary": "A city of canals and shipwrights, where the crew faces its hardest question yet.",
-    "moments": ["A city built on water", "A painful misunderstanding", "A flag that will not fall"],
-    "watch": "13h 30m",
+    "moments": [
+      "A city built on water",
+      "A painful misunderstanding",
+      "A flag that will not fall"
+    ],
+    "watch": "14h",
     "future": false,
     "banner": null
   },
@@ -247,11 +292,14 @@
     "saga": "Water 7",
     "start": 264,
     "end": 312,
-    "rating": 9.6,
     "kind": "canon",
     "summary": "A fortress of judgment, a declaration of war, and a fight to bring someone home.",
-    "moments": ["A declaration over the sea", "Eight against an institution", "\"I want to live!\""],
-    "watch": "18h 50m",
+    "moments": [
+      "A declaration over the sea",
+      "Eight against an institution",
+      "\"I want to live!\""
+    ],
+    "watch": "19h 36m",
     "future": false,
     "banner": "ARC_BANNER_ENIES_LOBBY"
   },
@@ -259,15 +307,18 @@
     "id": "post-enies",
     "seriesId": "one-piece",
     "name": "Post-Enies Lobby",
-    "island": "Return to Water 7",
+    "island": "Water 7",
     "saga": "Water 7",
     "start": 313,
     "end": 325,
-    "rating": 8.6,
     "kind": "canon",
     "summary": "The quiet after the storm — farewells, a new ship, and a bounty that changes everything.",
-    "moments": ["A new dream-ship revealed", "A tearful goodbye", "Bounties posted"],
-    "watch": "5h 05m",
+    "moments": [
+      "A new dream-ship revealed",
+      "A tearful goodbye",
+      "Bounties posted"
+    ],
+    "watch": "5h 12m",
     "future": false,
     "banner": null
   },
@@ -279,11 +330,14 @@
     "saga": "Thriller Bark",
     "start": 337,
     "end": 381,
-    "rating": 8.8,
     "kind": "canon",
     "summary": "A ghost ship the size of an island, a long night of fog, and a new face hiding behind a song.",
-    "moments": ["A mansion in the mist", "A shadow stolen at midnight", "A gentleman's debt repaid"],
-    "watch": "17h 20m",
+    "moments": [
+      "A mansion in the mist",
+      "A shadow stolen at midnight",
+      "A gentleman's debt repaid"
+    ],
+    "watch": "18h",
     "future": false,
     "banner": null
   },
@@ -295,11 +349,14 @@
     "saga": "Summit War",
     "start": 385,
     "end": 405,
-    "rating": 9.4,
     "kind": "canon",
     "summary": "The last stop before a far greater sea — a lawless grove where the crew meets the wider world.",
-    "moments": ["A lawless mangrove grove", "The wider world bares its teeth", "A scattering none saw coming"],
-    "watch": "8h 05m",
+    "moments": [
+      "A lawless mangrove grove",
+      "The wider world bares its teeth",
+      "A scattering none saw coming"
+    ],
+    "watch": "8h 24m",
     "future": false,
     "banner": null
   },
@@ -311,11 +368,14 @@
     "saga": "Summit War",
     "start": 408,
     "end": 417,
-    "rating": 8.7,
     "kind": "canon",
     "summary": "An island of warriors with rules of their own.",
-    "moments": ["An island that bars all men", "A proud empress", "An unlikely passage granted"],
-    "watch": "4h 00m",
+    "moments": [
+      "An island that bars all men",
+      "A proud empress",
+      "An unlikely passage granted"
+    ],
+    "watch": "4h",
     "future": false,
     "banner": null
   },
@@ -327,11 +387,14 @@
     "saga": "Summit War",
     "start": 422,
     "end": 452,
-    "rating": 9.2,
     "kind": "canon",
     "summary": "A prison beneath the sea with six descending levels.",
-    "moments": ["A descent through the levels", "Old foes turned fellow travelers", "A breakout against all odds"],
-    "watch": "12h 00m",
+    "moments": [
+      "A descent through the levels",
+      "Old foes turned fellow travelers",
+      "A breakout against all odds"
+    ],
+    "watch": "12h 24m",
     "future": false,
     "banner": null
   },
@@ -343,11 +406,14 @@
     "saga": "Summit War",
     "start": 457,
     "end": 489,
-    "rating": 9.7,
     "kind": "canon",
     "summary": "The arc everyone warns you about. We won't.",
-    "moments": ["A war that draws every power", "The plaza where it all converges", "An hour that changes the seas"],
-    "watch": "12h 45m",
+    "moments": [
+      "A war that draws every power",
+      "The plaza where it all converges",
+      "An hour that changes the seas"
+    ],
+    "watch": "13h 12m",
     "future": false,
     "banner": "ARC_BANNER_MARINEFORD"
   },
@@ -359,11 +425,14 @@
     "saga": "Summit War",
     "start": 490,
     "end": 516,
-    "rating": 8.4,
     "kind": "canon",
     "summary": "The world reels from a war that changed everything, and a scattered crew each find their own resolve.",
-    "moments": ["A world rocked by the news", "A quiet vow renewed", "A message hidden in the headlines"],
-    "watch": "10h 20m",
+    "moments": [
+      "A world rocked by the news",
+      "A quiet vow renewed",
+      "A message hidden in the headlines"
+    ],
+    "watch": "10h 48m",
     "future": false,
     "banner": null
   },
@@ -375,11 +444,14 @@
     "saga": "Fish-Man Island",
     "start": 517,
     "end": 522,
-    "rating": 8.2,
     "kind": "canon",
     "summary": "After two long years apart, a crew finds its way back to the grove where they once scattered.",
-    "moments": ["Familiar faces, changed", "Impostors and mix-ups", "A crew made whole again"],
-    "watch": "2h 20m",
+    "moments": [
+      "Familiar faces, changed",
+      "Impostors and mix-ups",
+      "A crew made whole again"
+    ],
+    "watch": "2h 24m",
     "future": false,
     "banner": null
   },
@@ -391,11 +463,14 @@
     "saga": "Fish-Man Island",
     "start": 523,
     "end": 574,
-    "rating": 8.0,
     "kind": "canon",
     "summary": "Ten thousand meters beneath the waves, a sunlit island carries old wounds and fragile hopes.",
-    "moments": ["A descent beneath the sea", "A kingdom under glass", "A choice between fear and forgiveness"],
-    "watch": "19h 55m",
+    "moments": [
+      "A descent beneath the sea",
+      "A kingdom under glass",
+      "A choice between fear and forgiveness"
+    ],
+    "watch": "20h 48m",
     "future": false,
     "banner": null
   },
@@ -407,11 +482,14 @@
     "saga": "Dressrosa",
     "start": 579,
     "end": 625,
-    "rating": 8.4,
     "kind": "canon",
     "summary": "A burning, freezing island split in two, where a distress call leads somewhere far stranger.",
-    "moments": ["An island of fire and ice", "An unlikely new alliance", "Something inhuman in the labs"],
-    "watch": "18h 00m",
+    "moments": [
+      "An island of fire and ice",
+      "An unlikely new alliance",
+      "Something inhuman in the labs"
+    ],
+    "watch": "18h 48m",
     "future": false,
     "banner": null
   },
@@ -423,11 +501,14 @@
     "saga": "Dressrosa",
     "start": 629,
     "end": 746,
-    "rating": 8.9,
     "kind": "canon",
     "summary": "A kingdom of flowers, toys, and gladiators, where a cheerful surface hides a long cruelty.",
-    "moments": ["A colosseum of champions", "A country of living toys", "An old score waiting to be settled"],
-    "watch": "45h 15m",
+    "moments": [
+      "A colosseum of champions",
+      "A country of living toys",
+      "An old score waiting to be settled"
+    ],
+    "watch": "47h 12m",
     "future": false,
     "banner": null
   },
@@ -439,11 +520,14 @@
     "saga": "Whole Cake Island",
     "start": 751,
     "end": 779,
-    "rating": 8.5,
     "kind": "canon",
     "summary": "An island that rides on the back of a giant, where a hidden people guard a centuries-old trust.",
-    "moments": ["A walk atop a living island", "A people long hidden", "A secret only half-told"],
-    "watch": "11h 05m",
+    "moments": [
+      "A walk atop a living island",
+      "A people long hidden",
+      "A secret only half-told"
+    ],
+    "watch": "11h 36m",
     "future": false,
     "banner": null
   },
@@ -455,11 +539,14 @@
     "saga": "Whole Cake Island",
     "start": 783,
     "end": 877,
-    "rating": 9.1,
     "kind": "canon",
     "summary": "A land of sweets and tea parties ruled with an iron sweet tooth, where an invitation is a trap dressed as a feast.",
-    "moments": ["A territory of living food", "A tea party with deadly manners", "A daring escape by sea"],
-    "watch": "36h 25m",
+    "moments": [
+      "A territory of living food",
+      "A tea party with deadly manners",
+      "A daring escape by sea"
+    ],
+    "watch": "38h",
     "future": false,
     "banner": null
   },
@@ -471,11 +558,14 @@
     "saga": "Whole Cake Island",
     "start": 878,
     "end": 889,
-    "rating": 8.6,
     "kind": "canon",
     "summary": "Kings and queens of the world gather on the holy land, and quiet conversations carry the weight of nations.",
-    "moments": ["Royalty from every sea", "Reunions long overdue", "Decisions made behind closed doors"],
-    "watch": "4h 35m",
+    "moments": [
+      "Royalty from every sea",
+      "Reunions long overdue",
+      "Decisions made behind closed doors"
+    ],
+    "watch": "4h 48m",
     "future": false,
     "banner": null
   },
@@ -487,11 +577,14 @@
     "saga": "Wano Country",
     "start": 890,
     "end": 1085,
-    "rating": 9.5,
     "kind": "canon",
     "summary": "A faraway land of samurai, sealed borders, and a storm long in the making.",
-    "moments": ["A land behind closed borders", "Samurai and their code", "A storm long in the making"],
-    "watch": "70h+",
+    "moments": [
+      "A land behind closed borders",
+      "Samurai and their code",
+      "A storm long in the making"
+    ],
+    "watch": "78h 24m",
     "future": false,
     "banner": "ARC_BANNER_WANO"
   },
@@ -503,11 +596,14 @@
     "saga": "Final Saga",
     "start": 1086,
     "end": 1155,
-    "rating": 9.0,
     "kind": "canon",
     "summary": "A futuristic island of science years ahead of its time, where wonder and danger share the same bright halls.",
-    "moments": ["An island from the future", "Machines beyond imagining", "A genius's hospitality"],
-    "watch": "26h 50m",
+    "moments": [
+      "An island from the future",
+      "Machines beyond imagining",
+      "A genius's hospitality"
+    ],
+    "watch": "28h",
     "future": false,
     "banner": null
   },
@@ -519,11 +615,14 @@
     "saga": "Final Saga",
     "start": 1156,
     "end": 1166,
-    "rating": 8.8,
     "kind": "canon",
     "summary": "The fabled land of giants and warriors, a place of legend long spoken of and finally reached.",
-    "moments": ["A land out of legend", "Giants and their warrior code", "A new chapter begins"],
-    "watch": "4h 15m",
+    "moments": [
+      "A land out of legend",
+      "Giants and their warrior code",
+      "A new chapter begins"
+    ],
+    "watch": "4h 24m",
     "future": false,
     "banner": null
   }

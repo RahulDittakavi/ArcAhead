@@ -39,8 +39,6 @@ export interface SeriesRecord {
   title: string;
   episodes: number;
   year: number;
-  tracked: number;
-  score: number;
   hue: number;
   tagline: string;
   tag: string;
@@ -57,7 +55,6 @@ export interface ArcRecord {
   saga: string;
   start: number;
   end: number;
-  rating: number;
   summary: string;
   moments: string[];
   watch: string;
@@ -90,7 +87,6 @@ export interface ArcDto {
   // would leak that it exists and what it is)
   summary?: string;
   moments?: string[];
-  rating?: number;
   banner?: string | null;
   kind?: ArcKind;
 }
@@ -131,6 +127,10 @@ export interface CharacterRecord {
   seriesId: string;
   name: string;
   epithet: string | null;
+  /** Episode at which the epithet becomes known/safe to show. Some epithets are
+   *  acquired later or hint at a later reveal (e.g. "Soul King", "Devil Child"),
+   *  so they're gated separately from first appearance. Defaults to epaffirst. */
+  epithetEp?: number;
   img: string | null;
   crew: boolean;
   /** Legacy single bounty (fallback when `bounties` is empty, e.g. non-crew). */
