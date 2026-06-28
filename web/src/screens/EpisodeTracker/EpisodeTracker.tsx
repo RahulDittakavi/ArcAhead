@@ -48,6 +48,7 @@ function CountBadges({ c }: { c: ClassCounts }) {
 
 function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean; onToggle: () => void }) {
   const { stateOf, markWatched, markSkipped, markUnwatched, markUpTo, markRange, canonOnly, hideMixed, ep } = useEpisode();
+  const isMobile = useIsMobile();
   const fut = arc.status === "future";
 
   // count watched/skipped in this arc's range (from client state — no server needed)
@@ -57,6 +58,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
     if (s === "watched" || s === "skipped" || s === "rewatching") done++;
   }
   const total = arc.end - arc.start + 1;
+  const allDone = done === total;
 
   // episodes fetched lazily only when expanded (windowed by arc)
   const { data: eps } = useApi(() => (expanded ? api.episodes(ep, { arc: arc.id }) : Promise.resolve(null)), [expanded, arc.id, ep]);
@@ -70,29 +72,88 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
     else markWatched(n);
   };
 
+  const skipFiller = () => {
+    if (eps) eps.forEach((e) => e.classification === "filler" && markSkipped(e.number));
+  };
+
+  const qBtn: React.CSSProperties = {
+    display: "flex", alignItems: "center", gap: 5, padding: "5px 10px",
+    borderRadius: 8, border: "1px solid var(--line-2)", background: "var(--surface-2)",
+    cursor: "pointer", fontSize: 12, color: "var(--text-2)", whiteSpace: "nowrap",
+    flexShrink: 0,
+  };
+
   return (
     <Card pad={0} style={{ overflow: "hidden" }}>
-      <button
-        onClick={onToggle}
-        style={{ width: "100%", display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", color: "var(--text)" }}
-      >
-        <Icon name={expanded ? "chevron-up" : "chevron-down"} size={18} color="var(--text-3)" />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, filter: fut ? "blur(5px)" : "none", userSelect: fut ? "none" : "auto" }}>
-            {fut ? "Uncharted island" : arc.island}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button
+          onClick={onToggle}
+          style={{ flex: 1, display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", color: "var(--text)", minWidth: 0 }}
+        >
+          <Icon name={expanded ? "chevron-up" : "chevron-down"} size={18} color="var(--text-3)" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, filter: fut ? "blur(5px)" : "none", userSelect: fut ? "none" : "auto" }}>
+              {fut ? "Uncharted island" : arc.island}
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <span>{arc.saga} · Ep {arc.start}–{arc.end}</span>
+              {!fut && <CountBadges c={arc.classCounts} />}
+            </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <span>{arc.saga} · Ep {arc.start}–{arc.end}</span>
-            {!fut && <CountBadges c={arc.classCounts} />}
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: allDone ? "var(--green)" : "var(--text-3)" }}>{done}/{total}</span>
+              <div style={{ width: 60, height: 6, borderRadius: 9, background: "var(--surface-3)", overflow: "hidden" }}>
+                <div style={{ width: `${(done / total) * 100}%`, height: "100%", background: allDone ? "var(--green)" : "linear-gradient(90deg,var(--orange-deep),var(--orange-hi))" }} />
+              </div>
+            </div>
+          )}
+        </button>
+
+        {/* Quick-action buttons — always visible, no expansion needed */}
+        {!fut && (
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px 0 0", flexShrink: 0 }}>
+            {isMobile && (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: allDone ? "var(--green)" : "var(--text-3)", marginRight: 2 }}>{done}/{total}</span>
+            )}
+            {!allDone ? (
+              <button style={{ ...qBtn, color: "var(--green)", borderColor: "color-mix(in oklab, var(--green) 30%, transparent)" }}
+                onClick={(e) => { e.stopPropagation(); markRange(arc.start, arc.end, "watched"); }}
+                title="Mark entire arc as watched"
+              >
+                <Icon name="check-check" size={13} color="var(--green)" />
+                {!isMobile && "All watched"}
+              </button>
+            ) : (
+              <button style={{ ...qBtn, color: "var(--text-3)" }}
+                onClick={(e) => { e.stopPropagation(); markRange(arc.start, arc.end, "unwatched"); }}
+                title="Clear arc"
+              >
+                <Icon name="rotate-ccw" size={13} />
+                {!isMobile && "Clear"}
+              </button>
+            )}
+            {arc.classCounts?.filler > 0 && (
+              <button
+                style={{ ...qBtn, color: "var(--blue)", borderColor: "color-mix(in oklab, var(--blue) 30%, transparent)" }}
+                onClick={(e) => { e.stopPropagation(); if (eps) skipFiller(); else { onToggle(); } }}
+                title={`Skip ${arc.classCounts.filler} filler episodes`}
+              >
+                <Icon name="skip-forward" size={13} color="var(--blue)" />
+                {!isMobile && `Skip filler`}
+              </button>
+            )}
+            <button
+              style={{ ...qBtn, color: "var(--orange-hi)", borderColor: "color-mix(in oklab, var(--orange) 30%, transparent)" }}
+              onClick={(e) => { e.stopPropagation(); markUpTo(arc.end); }}
+              title="Mark all episodes up to the end of this arc as watched"
+            >
+              <Icon name="check" size={13} color="var(--orange-hi)" />
+              {!isMobile && "Up to here"}
+            </button>
           </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: done === total ? "var(--green)" : "var(--text-3)" }}>{done}/{total}</span>
-          <div style={{ width: 60, height: 6, borderRadius: 9, background: "var(--surface-3)", overflow: "hidden" }}>
-            <div style={{ width: `${(done / total) * 100}%`, height: "100%", background: done === total ? "var(--green)" : "linear-gradient(90deg,var(--orange-deep),var(--orange-hi))" }} />
-          </div>
-        </div>
-      </button>
+        )}
+      </div>
 
       {expanded && (
         <div style={{ borderTop: "1px solid var(--line)" }}>
