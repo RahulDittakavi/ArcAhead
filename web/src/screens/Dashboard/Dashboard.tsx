@@ -9,9 +9,14 @@ import { api, fmtHours } from "../../lib/api";
 import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
 import { computeStreak, pacePerWeek, countState } from "../../lib/stats";
+import { useAuth } from "../../lib/auth";
 
 export function Dashboard() {
   const { ep, maxEp, states, ts } = useEpisode();
+  const { user } = useAuth();
+  const displayName = user?.user_metadata?.full_name?.split(" ")[0]
+    ?? user?.email?.split("@")[0]
+    ?? "navigator";
   const { openArc, openChar, go } = useNav();
   const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
@@ -49,7 +54,7 @@ export function Dashboard() {
       <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: isMobile ? "12px 16px 32px" : "16px 32px 80px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 22, flexWrap: "wrap", gap: 16 }}>
           <div>
-            <div style={{ color: "var(--text-3)", fontSize: 14, marginBottom: 4 }}>Welcome back, navigator</div>
+            <div style={{ color: "var(--text-3)", fontSize: 14, marginBottom: 4 }}>Welcome back, {displayName}</div>
             <h1 style={{ fontSize: "clamp(26px,3vw,38px)" }}>
               Your <span style={{ color: "var(--orange)" }}>Grand Line</span> voyage
             </h1>

@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Eyebrow, Card } from "../../components/primitives";
 import { PlaceImg } from "../../components/PlaceImg";
-import { SeaChart } from "../../components/viz";
+import { SeaChart, CompassRose } from "../../components/viz";
+import { TourOverlay, hasTourBeenSeen } from "../../components/TourOverlay";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api, fmtHours } from "../../lib/api";
 import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
+import { useAuth } from "../../lib/auth";
+import { supabase } from "../../lib/supabase";
 
 const stepBtn: React.CSSProperties = { width: 44, height: 44, borderRadius: 12, border: "1px solid var(--line-2)", background: "var(--surface-2)", color: "var(--text)", cursor: "pointer", display: "grid", placeItems: "center" };
 
@@ -26,8 +30,44 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
   const { ep, maxEp, setEp } = useEpisode();
   const { go } = useNav();
   const isMobile = useIsMobile();
+  const { user, loading: authLoading, signIn } = useAuth();
+  const [skipped, setSkipped] = useState(false);
+  const [showTour, setShowTour] = useState(() => !hasTourBeenSeen());
   const { data: series } = useApi(() => api.series(), []);
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
+
+  // Show auth gate when Supabase is configured, auth is resolved, and user hasn't signed in or skipped.
+  if (supabase && !authLoading && !user && !skipped) {
+    return (
+      <SeaChart>
+        <div style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 24px" }}>
+          <div style={{ maxWidth: 420, width: "100%", textAlign: "center" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 28, opacity: 0.5 }}>
+              <CompassRose size={90} opacity={0.6} />
+            </div>
+            <h2 style={{ fontSize: "clamp(26px,3.5vw,36px)", marginBottom: 12 }}>Save your voyage</h2>
+            <p style={{ color: "var(--text-2)", fontSize: 15.5, lineHeight: 1.6, marginBottom: 32 }}>
+              Sign in so your progress syncs across every device and browser. Without an account, your log pose will be lost if you clear your browser or switch devices.
+            </p>
+            <button
+              className="btn btn-lg btn-primary"
+              onClick={signIn}
+              style={{ width: "100%", justifyContent: "center", marginBottom: 14 }}
+            >
+              <Icon name="log-in" size={18} /> Sign in with Google
+            </button>
+            <button
+              className="btn btn-lg btn-ghost"
+              onClick={() => setSkipped(true)}
+              style={{ width: "100%", justifyContent: "center", color: "var(--text-3)", fontSize: 14 }}
+            >
+              Continue without saving
+            </button>
+          </div>
+        </div>
+      </SeaChart>
+    );
+  }
 
   const episodes = series?.episodes ?? maxEp;
   const remaining = Math.max(0, episodes - ep);
@@ -69,19 +109,20 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <Card pad={28} glow>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-                <div>
+                <div data-tour="ep-display">
                   <div style={{ fontSize: 13, color: "var(--text-3)", marginBottom: 6 }}>Last episode watched</div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
                     <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 64, lineHeight: 0.9, color: "var(--orange-hi)" }}>{ep}</span>
                     <span style={{ fontSize: 18, color: "var(--text-3)" }}>/ {episodes}</span>
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
+                <div data-tour="ep-stepper" style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => setEp(Math.max(1, ep - 1))} style={stepBtn}><Icon name="minus" size={18} /></button>
                   <button onClick={() => setEp(Math.min(episodes, ep + 1))} style={stepBtn}><Icon name="plus" size={18} /></button>
                 </div>
               </div>
               <input
+                data-tour="ep-slider"
                 type="range"
                 min={1}
                 max={episodes}
@@ -90,7 +131,7 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
                 className="ep-slider"
                 style={{ width: "100%", ["--fill" as string]: fill }}
               />
-              <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+              <div data-tour="ep-presets" style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
                 {presets.map((o) => (
                   <button
                     key={o.lab}
@@ -117,12 +158,13 @@ export function ProgressSetup({ seriesTitle }: { seriesTitle: string }) {
               </div>
             </div>
 
-            <button className="btn btn-lg btn-primary" onClick={() => go("dashboard")} style={{ justifyContent: "center" }}>
+            <button data-tour="begin-btn" className="btn btn-lg btn-primary" onClick={() => go("dashboard")} style={{ justifyContent: "center" }}>
               Begin your voyage <Icon name="arrow-right" size={18} />
             </button>
           </div>
         </div>
       </div>
+      {showTour && <TourOverlay onDone={() => setShowTour(false)} />}
     </SeaChart>
   );
 }
