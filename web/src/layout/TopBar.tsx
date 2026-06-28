@@ -43,15 +43,18 @@ export function TopBar({ title }: { title: string }) {
         backdropFilter: "blur(14px)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+      <button
+        onClick={() => go("catalog")}
+        style={{ display: "flex", alignItems: "center", gap: 13, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}
+      >
         <div style={{ width: 38, height: 38, borderRadius: 10, background: "var(--orange-faint)", border: "1px solid var(--line-2)", display: "grid", placeItems: "center", flexShrink: 0 }}>
           <Icon name="compass" size={20} color="var(--orange-hi)" />
         </div>
         <div>
-          <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, lineHeight: 1.1 }}>{title}</div>
+          <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, lineHeight: 1.1, color: "var(--text)" }}>{title}</div>
           <div style={{ fontSize: 12, color: "var(--text-3)" }}>{island}</div>
         </div>
-      </div>
+      </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 14 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 2, background: "var(--surface)", border: "1px solid var(--line-2)", borderRadius: 999, padding: 4 }}>
