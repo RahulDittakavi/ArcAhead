@@ -5,6 +5,8 @@ import { SeaChart } from "../../components/viz";
 import { useEpisode } from "../../lib/episode";
 import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
+import { useAuth } from "../../lib/auth";
+import { supabase } from "../../lib/supabase";
 
 function Toggle({ on, onChange, disabled }: { on: boolean; onChange: (b: boolean) => void; disabled?: boolean }) {
   return (
@@ -40,6 +42,7 @@ export function Settings() {
   const { ep, maxEp, canonOnly, setCanonOnly, hideMixed, setHideMixed, resetProgress, exportData, importData } = useEpisode();
   const { go } = useNav();
   const isMobile = useIsMobile();
+  const { user, loading: authLoading, authError, signIn, signOut } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState<string | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -75,6 +78,35 @@ export function Settings() {
           </div>
         )}
 
+        {/* account / sync — only shown when Supabase is configured */}
+        {supabase && (
+          <Card pad={isMobile ? 18 : 24} style={{ marginBottom: 18 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, letterSpacing: ".08em", color: "var(--text-3)" }}>ACCOUNT</div>
+            {authLoading ? (
+              <div style={{ padding: "14px 0", color: "var(--text-3)", fontSize: 13 }}>Loading…</div>
+            ) : user ? (
+              <Row title={user.email ?? "Signed in"} desc="Progress syncs automatically across all your devices.">
+                <button className="btn btn-sm btn-ghost" onClick={signOut}>
+                  <Icon name="log-out" size={14} /> Sign out
+                </button>
+              </Row>
+            ) : (
+              <>
+                {authError && (
+                  <div style={{ margin: "12px 0 4px", padding: "10px 14px", borderRadius: 10, background: "var(--surface-3)", color: "var(--red, #e0524d)", fontSize: 12.5, lineHeight: 1.5 }}>
+                    Sign-in failed: {authError}. Make sure the redirect URI is registered in Google Cloud Console.
+                  </div>
+                )}
+                <Row title="Sync your voyage" desc="Sign in with Google to keep your progress across devices and browsers.">
+                  <button className="btn btn-sm btn-primary" onClick={signIn} style={{ whiteSpace: "nowrap" }}>
+                    <Icon name="log-in" size={14} /> Sign in with Google
+                  </button>
+                </Row>
+              </>
+            )}
+          </Card>
+        )}
+
         {/* viewing preferences */}
         <Card pad={isMobile ? 18 : 24} style={{ marginBottom: 18 }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, letterSpacing: ".08em", color: "var(--text-3)" }}>VIEWING</div>
@@ -99,7 +131,7 @@ export function Settings() {
         {/* data */}
         <Card pad={isMobile ? 18 : 24}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, letterSpacing: ".08em", color: "var(--text-3)" }}>YOUR DATA</div>
-          <Row title="Export progress" desc="Download your watch history as a JSON file (this build stores progress in your browser, not an account).">
+          <Row title="Export progress" desc="Download your watch history as a JSON file. Useful as a backup or to transfer to another browser.">
             <button className="btn btn-sm btn-ghost" onClick={onExport}>
               <Icon name="download" size={14} /> Export
             </button>

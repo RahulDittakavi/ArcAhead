@@ -4,6 +4,7 @@ import { useNav } from "../lib/nav";
 import { useApi } from "../lib/useApi";
 import { api } from "../lib/api";
 import { useIsMobile } from "../lib/useIsMobile";
+import { useAuth } from "../lib/auth";
 
 const miniStep: React.CSSProperties = {
   width: 30,
@@ -21,6 +22,7 @@ export function TopBar({ title }: { title: string }) {
   const { ep, maxEp, setEp } = useEpisode();
   const { go } = useNav();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
   // Mirrors the prototype TopBar: shows the current island under the title.
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
   const island = journey?.current?.island ?? "—";
@@ -67,9 +69,19 @@ export function TopBar({ title }: { title: string }) {
         <button className="btn btn-sm btn-ghost" onClick={() => go("search")} title="Search">
           <Icon name="search" size={16} />
         </button>
-        <button className="btn btn-sm btn-ghost" onClick={() => go("settings")} title="Settings">
-          <Icon name="settings" size={16} />
-        </button>
+        {user ? (
+          <button
+            onClick={() => go("settings")}
+            title={user.email ?? "Your account"}
+            style={{ width: 32, height: 32, borderRadius: 99, border: "none", background: "var(--orange)", cursor: "pointer", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#fff", flexShrink: 0 }}
+          >
+            {(user.email ?? "?")[0].toUpperCase()}
+          </button>
+        ) : (
+          <button className="btn btn-sm btn-ghost" onClick={() => go("settings")} title="Settings">
+            <Icon name="settings" size={16} />
+          </button>
+        )}
       </div>
     </header>
   );

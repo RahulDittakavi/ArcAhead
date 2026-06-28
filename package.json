@@ -17,6 +17,10 @@
     "test": "npm run test --workspace server",
     "sync:kb": "npm run sync:kb --workspace server --",
     "dev:server": "npm run dev --workspace server",
-    "dev:web": "npm run dev --workspace web"
+    "dev:web": "npm run dev --workspace web",
+    "dev": "concurrently -n server,web -c cyan,yellow \"npm run dev:server\" \"npm run dev:web\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }

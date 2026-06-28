@@ -9,6 +9,7 @@ import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
 import { api } from "../../lib/api";
 import { useIsMobile } from "../../lib/useIsMobile";
+import { useAuth } from "../../lib/auth";
 
 const navLink: React.CSSProperties = { fontSize: 14.5, color: "var(--text-2)", cursor: "pointer", fontWeight: 500 };
 
@@ -26,6 +27,7 @@ export function Landing() {
   const { go } = useNav();
   const isMobile = useIsMobile();
   const { ep } = useEpisode();
+  const { user } = useAuth();
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
   const { data: arcs } = useApi(() => api.arcs(ep), [ep]);
 
@@ -51,10 +53,26 @@ export function Landing() {
               <span className="lnk" style={navLink}>How it works</span>
               <span className="lnk" style={navLink}>The Crew</span>
               <span className="lnk" style={navLink}>Spoiler Shield</span>
-              <button className="btn btn-sm btn-ghost" onClick={() => go("setup")}>Sign in</button>
+              {user ? (
+                <button
+                  onClick={() => go("settings")}
+                  title={user.email ?? "Your account"}
+                  style={{ width: 32, height: 32, borderRadius: 99, border: "none", background: "var(--orange)", cursor: "pointer", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#fff", flexShrink: 0 }}
+                >
+                  {(user.email ?? "?")[0].toUpperCase()}
+                </button>
+              ) : (
+                <button className="btn btn-sm btn-ghost" onClick={() => go("settings")}>Sign in</button>
+              )}
             </>
           )}
-          <button className="btn btn-sm btn-primary" onClick={() => go("setup")}>Set sail free</button>
+          {user ? (
+            <button className="btn btn-sm btn-primary" onClick={() => go("dashboard")}>
+              Continue voyage <Icon name="arrow-right" size={15} />
+            </button>
+          ) : (
+            <button className="btn btn-sm btn-primary" onClick={() => go("setup")}>Set sail free</button>
+          )}
         </nav>
       </header>
 
@@ -73,9 +91,15 @@ export function Landing() {
           ArcAhead is your navigator through One Piece. Tell us your episode — we'll chart the islands behind you, light the next horizon, and keep everything past it lost in the fog.
         </p>
         <div className="fade-up" style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", animationDelay: ".18s" }}>
-          <button className="btn btn-lg btn-primary" onClick={() => go("setup")}>
-            Start Your Voyage <Icon name="arrow-right" size={19} />
-          </button>
+          {user ? (
+            <button className="btn btn-lg btn-primary" onClick={() => go("dashboard")}>
+              Continue Your Voyage <Icon name="arrow-right" size={19} />
+            </button>
+          ) : (
+            <button className="btn btn-lg btn-primary" onClick={() => go("setup")}>
+              Start Your Voyage <Icon name="arrow-right" size={19} />
+            </button>
+          )}
           <button className="btn btn-lg btn-ghost" onClick={() => go("dashboard")}>
             <Icon name="play" size={17} /> See it in action
           </button>
@@ -198,9 +222,15 @@ export function Landing() {
           <div style={{ position: "relative" }}>
             <h2 style={{ fontSize: "clamp(30px,4.2vw,52px)", marginBottom: 16 }}>The greatest voyage deserves a careful first read.</h2>
             <p style={{ color: "var(--text-2)", fontSize: 18, marginBottom: 30, maxWidth: 480, margin: "0 auto 30px" }}>Set your episode once. We'll guard every horizon from here to the New World.</p>
-            <button className="btn btn-lg btn-primary" onClick={() => go("setup")}>
-              Start Your Voyage <Icon name="arrow-right" size={19} />
-            </button>
+            {user ? (
+              <button className="btn btn-lg btn-primary" onClick={() => go("dashboard")}>
+                Continue Your Voyage <Icon name="arrow-right" size={19} />
+              </button>
+            ) : (
+              <button className="btn btn-lg btn-primary" onClick={() => go("setup")}>
+                Start Your Voyage <Icon name="arrow-right" size={19} />
+              </button>
+            )}
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 34, color: "var(--text-3)", fontSize: 13, flexWrap: "wrap", gap: 10 }}>

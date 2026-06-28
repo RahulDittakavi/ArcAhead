@@ -3,12 +3,17 @@ import { createRoot } from "react-dom/client";
 import "./styles/tokens.css";
 import { App } from "./App";
 import { EpisodeProvider } from "./lib/episode";
+import { AuthProvider } from "./lib/auth";
+import { SyncBridge } from "./components/SyncBridge";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <EpisodeProvider maxEp={1166}>
-      <App />
-    </EpisodeProvider>
+    <AuthProvider>
+      <EpisodeProvider maxEp={1166}>
+        <SyncBridge />
+        <App />
+      </EpisodeProvider>
+    </AuthProvider>
   </StrictMode>
 );
 
