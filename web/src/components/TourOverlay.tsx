@@ -43,9 +43,8 @@ const STEPS: Step[] = [
   },
 ];
 
-const TOOLTIP_W = 270;
 const GAP = 16;
-const PAD = 10;
+const PAD = 12;
 
 interface Rect { top: number; left: number; width: number; height: number }
 
@@ -54,16 +53,23 @@ function getTooltipPos(rect: Rect, placement: Step["placement"]) {
   const cy = rect.top + rect.height / 2;
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  const isMobile = vw < 600;
 
-  let style: React.CSSProperties = { position: "fixed", width: TOOLTIP_W };
+  // On mobile, always anchor below (or above if near bottom) — side placements overflow.
+  const effective: Step["placement"] = isMobile
+    ? (rect.top + rect.height + GAP + 180 < vh ? "bottom" : "top")
+    : placement;
 
-  if (placement === "bottom") {
+  const w = Math.min(270, vw - PAD * 2);
+  let style: React.CSSProperties = { position: "fixed", width: w };
+
+  if (effective === "bottom") {
     style.top = rect.top + rect.height + GAP;
-    style.left = Math.max(PAD, Math.min(cx - TOOLTIP_W / 2, vw - TOOLTIP_W - PAD));
-  } else if (placement === "top") {
+    style.left = Math.max(PAD, Math.min(cx - w / 2, vw - w - PAD));
+  } else if (effective === "top") {
     style.bottom = vh - rect.top + GAP;
-    style.left = Math.max(PAD, Math.min(cx - TOOLTIP_W / 2, vw - TOOLTIP_W - PAD));
-  } else if (placement === "left") {
+    style.left = Math.max(PAD, Math.min(cx - w / 2, vw - w - PAD));
+  } else if (effective === "left") {
     style.top = Math.max(PAD, cy - 80);
     style.right = vw - rect.left + GAP;
   } else {
@@ -104,7 +110,7 @@ export function TourOverlay({ onDone }: { onDone: () => void }) {
   const next = () => step < STEPS.length - 1 ? setStep(s => s + 1) : done();
   const prev = () => setStep(s => Math.max(0, s - 1));
 
-  const tipStyle = rect ? getTooltipPos(rect, current.placement) : { position: "fixed" as const, top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: TOOLTIP_W };
+  const tipStyle = rect ? getTooltipPos(rect, current.placement) : { position: "fixed" as const, top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 270 };
 
   return (
     <>
