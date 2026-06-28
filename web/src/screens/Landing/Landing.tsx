@@ -53,18 +53,18 @@ export function Landing() {
               <span className="lnk" style={navLink}>How it works</span>
               <span className="lnk" style={navLink}>The Crew</span>
               <span className="lnk" style={navLink}>Spoiler Shield</span>
-              {user ? (
-                <button
-                  onClick={() => go("settings")}
-                  title={user.email ?? "Your account"}
-                  style={{ width: 32, height: 32, borderRadius: 99, border: "none", background: "var(--orange)", cursor: "pointer", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#fff", flexShrink: 0 }}
-                >
-                  {(user.email ?? "?")[0].toUpperCase()}
-                </button>
-              ) : (
-                <button className="btn btn-sm btn-ghost" onClick={() => go("settings")}>Sign in</button>
-              )}
             </>
+          )}
+          {user ? (
+            <button
+              onClick={() => go("settings")}
+              title={user.email ?? "Your account"}
+              style={{ width: 32, height: 32, borderRadius: 99, border: "none", background: "var(--orange)", cursor: "pointer", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: "#fff", flexShrink: 0 }}
+            >
+              {(user.email ?? "?")[0].toUpperCase()}
+            </button>
+          ) : (
+            <button className="btn btn-sm btn-ghost" onClick={() => go("settings")}>Sign in</button>
           )}
           {user ? (
             <button className="btn btn-sm btn-primary" onClick={() => go("dashboard")}>

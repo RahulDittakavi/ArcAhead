@@ -53,14 +53,14 @@ export function TopBar({ title }: { title: string }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 14 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 2, background: "var(--surface)", border: "1px solid var(--line-2)", borderRadius: 999, padding: 4 }}>
           <button onClick={() => setEp(Math.max(1, ep - 1))} style={miniStep} title="Back one episode">
             <Icon name="minus" size={15} />
           </button>
-          <div style={{ padding: "0 12px", textAlign: "center", minWidth: 92 }}>
-            <div style={{ fontSize: 9.5, color: "var(--text-3)", letterSpacing: "0.5px", lineHeight: 1 }}>EPISODE</div>
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17, color: "var(--orange-hi)", lineHeight: 1.1 }}>{ep}</div>
+          <div style={{ padding: isMobile ? "0 8px" : "0 12px", textAlign: "center", minWidth: isMobile ? 52 : 92 }}>
+            {!isMobile && <div style={{ fontSize: 9.5, color: "var(--text-3)", letterSpacing: "0.5px", lineHeight: 1 }}>EPISODE</div>}
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: isMobile ? 15 : 17, color: "var(--orange-hi)", lineHeight: 1.1 }}>{ep}</div>
           </div>
           <button onClick={() => setEp(Math.min(maxEp, ep + 1))} style={miniStep} title="Forward one episode">
             <Icon name="plus" size={15} />
