@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Card } from "../../components/primitives";
 import { SeaChart, LogPose, HypeMeter } from "../../components/viz";
@@ -10,10 +11,12 @@ import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
 import { computeStreak, pacePerWeek, countState } from "../../lib/stats";
 import { useAuth } from "../../lib/auth";
+import { ShareModal } from "./ShareModal";
 
 export function Dashboard() {
   const { ep, maxEp, states, ts } = useEpisode();
   const { user } = useAuth();
+  const [showShare, setShowShare] = useState(false);
   const displayName = user?.user_metadata?.full_name?.split(" ")[0]
     ?? user?.email?.split("@")[0]
     ?? "navigator";
@@ -59,13 +62,16 @@ export function Dashboard() {
               Your <span style={{ color: "var(--orange)" }}>Grand Line</span> voyage
             </h1>
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {streak > 0 ? (
               <span className="chip"><Icon name="flame" size={13} color="var(--orange-hi)" /> {streak}-day streak</span>
             ) : (
               <span className="chip" onClick={() => go("episodes")} style={{ cursor: "pointer" }}><Icon name="flame" size={13} color="var(--text-3)" /> Start a streak</span>
             )}
             <span className="chip"><Icon name="map-pin" size={13} color="var(--orange-hi)" /> {journey.doneCount} islands discovered</span>
+            <button className="btn btn-sm btn-ghost" onClick={() => setShowShare(true)}>
+              <Icon name="share-2" size={14} /> Share voyage
+            </button>
           </div>
         </div>
 
@@ -295,6 +301,22 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+      {showShare && (
+        <ShareModal
+          data={{
+            ep,
+            maxEp,
+            island: arc.island,
+            saga: arc.saga,
+            pct: journey.pct,
+            islandsDiscovered: journey.doneCount,
+            watchedEps: watchedCount,
+            streak,
+            displayName,
+          }}
+          onClose={() => setShowShare(false)}
+        />
+      )}
     </SeaChart>
   );
 }
