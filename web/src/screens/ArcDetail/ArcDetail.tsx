@@ -83,7 +83,7 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
                 </span>
               )}
             </div>
-            <h1 style={{ fontSize: "clamp(34px,5vw,60px)", marginBottom: 8, filter: isFuture ? "blur(8px)" : "none", userSelect: isFuture ? "none" : "auto" }}>{full.island}</h1>
+            <h1 style={{ fontSize: "clamp(34px,5vw,60px)", marginBottom: 8 }}>{full.island}</h1>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--text-3)", marginBottom: 16 }}>{isFuture ? "An island still under cloud" : full.name + " arc"}</div>
             <p style={{ fontSize: 17, color: "var(--text-2)", maxWidth: 560, lineHeight: 1.6 }}>
               {isFuture ? "This island is still beyond your log pose. Sail on to lift the fog." : full.summary}
@@ -164,7 +164,7 @@ export function ArcDetail({ arcId }: { arcId: string | null }) {
                 <div
                   key={a.id}
                   onClick={() => openArc(a.id)}
-                  style={{ flexShrink: 0, width: 152, cursor: "pointer", borderRadius: "var(--r)", padding: 16, border: isThis ? "1.5px solid var(--orange)" : "1px solid var(--line)", background: isThis ? "var(--orange-faint)" : "var(--surface-2)", filter: fut ? "blur(2.5px)" : "none", opacity: fut ? 0.6 : 1, transition: "filter .3s" }}
+                  style={{ flexShrink: 0, width: 152, cursor: "pointer", borderRadius: "var(--r)", padding: 16, border: isThis ? "1.5px solid var(--orange)" : "1px solid var(--line)", background: isThis ? "var(--orange-faint)" : "var(--surface-2)", opacity: fut ? 0.55 : 1 }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                     <span style={{ width: 24, height: 14, borderRadius: "60% 60% 22% 22% / 100% 100% 22% 22%", display: "grid", placeItems: "center", background: fut ? "var(--surface-3)" : "linear-gradient(180deg,var(--orange-hi),var(--orange-deep))" }}>

@@ -129,7 +129,7 @@ export function Dashboard() {
                 {horizon.map((a, k) => (
                   <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 12.5, color: "var(--text-3)" }}>
                     <Icon name="lock" size={12} color="var(--text-4)" />
-                    <span style={{ filter: k === 0 ? "none" : `blur(${k * 1.6}px)` }}>{k === 0 ? "A new world awaits" : a.island}</span>
+                    <span style={{ opacity: k === 0 ? 1 : 1 - k * 0.2 }}>{a.island}</span>
                   </div>
                 ))}
               </div>

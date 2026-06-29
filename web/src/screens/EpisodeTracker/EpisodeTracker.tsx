@@ -92,8 +92,8 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
         >
           <Icon name={expanded ? "chevron-up" : "chevron-down"} size={18} color="var(--text-3)" />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, filter: fut ? "blur(5px)" : "none", userSelect: fut ? "none" : "auto" }}>
-              {fut ? "Uncharted island" : arc.island}
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: fut ? "var(--text-3)" : "var(--text)" }}>
+              {arc.island}
             </div>
             <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
               <span>{arc.saga} · Ep {arc.start}–{arc.end}</span>

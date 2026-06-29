@@ -47,7 +47,7 @@ function SeaRoute({ journey, onArc }: { journey: JourneyDto; onArc?: (a: ArcDto)
               <div
                 data-current={curr || undefined}
                 onClick={() => onArc && onArc(a)}
-                style={{ position: "relative", flexShrink: 0, width: 122, textAlign: "center", cursor: onArc ? "pointer" : "default", filter: fut ? `blur(${fogDepth * 2.4}px)` : "none", opacity: fut ? 1 - fogDepth * 0.5 : 1, transition: "filter .4s, opacity .4s" }}
+                style={{ position: "relative", flexShrink: 0, width: 122, textAlign: "center", cursor: onArc ? "pointer" : "default", opacity: fut ? 1 - fogDepth * 0.45 : 1, transition: "opacity .4s" }}
               >
                 {curr && (
                   <div style={{ position: "absolute", top: -56, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
@@ -158,7 +158,7 @@ function SeaChartBars({ journey }: { journey: JourneyDto }) {
         const pct = Math.round((done / s.arcs.length) * 100);
         const future = !hasCurrent && done === 0;
         return (
-          <div key={s.name} style={{ display: "flex", alignItems: "center", gap: 16, opacity: future ? 0.5 : 1, filter: future ? "blur(0.4px)" : "none" }}>
+          <div key={s.name} style={{ display: "flex", alignItems: "center", gap: 16, opacity: future ? 0.5 : 1 }}>
             <div style={{ width: 130, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13.5, color: hasCurrent ? "var(--orange-hi)" : "var(--text-2)", display: "flex", alignItems: "center", gap: 7 }}>
               {future && <Icon name="cloud-fog" size={12} color="var(--text-4)" />}
               {s.name}

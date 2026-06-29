@@ -174,7 +174,7 @@ export function Landing() {
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".12em", color: fog ? "var(--text-3)" : "var(--orange-hi)", marginBottom: 5 }}>
                     {fog ? "UNCHARTED" : "DISCOVERED"} · {a.saga.toUpperCase()}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, filter: fog ? "blur(5px)" : "none" }}>{a.island}</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, opacity: fog ? 0.5 : 1 }}>{a.island}</div>
                 </div>
               </div>
             );
