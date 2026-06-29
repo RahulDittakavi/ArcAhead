@@ -1,0 +1,42 @@
+name: Sync One Piece episodes
+
+on:
+  schedule:
+    # Every Sunday at 11:00 UTC (One Piece airs ~9:00 JST Sunday = 00:00 UTC,
+    # so this runs after the episode is fully indexed on AniList).
+    - cron: '0 11 * * 0'
+  workflow_dispatch: # also runnable manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Fetch episode count from AniList
+        run: npm run sync:episodes --workspace server
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name  "arcahead-bot"
+          git config user.email "bot@arcahead.app"
+          git add server/data/timeline.json server/data/arcs.json
+          if git diff --staged --quiet; then
+            echo "Nothing changed — already up to date."
+          else
+            EP=$(node -e "console.log(require('./server/data/timeline.json').series.episodes)")
+            git commit -m "chore: sync to EP ${EP}"
+            git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+            echo "Pushed — Render will redeploy automatically."
+          fi

@@ -2,23 +2,78 @@
   "series": {
     "id": "one-piece",
     "title": "One Piece",
-    "episodes": 1166,
+    "episodes": 1168,
     "year": 1999,
     "hue": 32,
     "tagline": "A grand voyage across an endless sea, in search of the ultimate treasure.",
     "tag": "Adventure"
   },
   "sagas": [
-    { "name": "East Blue", "order": 1, "fromEp": 1, "toEp": 61 },
-    { "name": "Alabasta", "order": 2, "fromEp": 62, "toEp": 135 },
-    { "name": "Sky Island", "order": 3, "fromEp": 136, "toEp": 206 },
-    { "name": "Water 7", "order": 4, "fromEp": 207, "toEp": 325 },
-    { "name": "Thriller Bark", "order": 5, "fromEp": 326, "toEp": 384 },
-    { "name": "Summit War", "order": 6, "fromEp": 385, "toEp": 516 },
-    { "name": "Fish-Man Island", "order": 7, "fromEp": 517, "toEp": 574 },
-    { "name": "Dressrosa", "order": 8, "fromEp": 575, "toEp": 746 },
-    { "name": "Whole Cake Island", "order": 9, "fromEp": 747, "toEp": 889 },
-    { "name": "Wano Country", "order": 10, "fromEp": 890, "toEp": 1085 },
-    { "name": "Final Saga", "order": 11, "fromEp": 1086, "toEp": 1166 }
+    {
+      "name": "East Blue",
+      "order": 1,
+      "fromEp": 1,
+      "toEp": 61
+    },
+    {
+      "name": "Alabasta",
+      "order": 2,
+      "fromEp": 62,
+      "toEp": 135
+    },
+    {
+      "name": "Sky Island",
+      "order": 3,
+      "fromEp": 136,
+      "toEp": 206
+    },
+    {
+      "name": "Water 7",
+      "order": 4,
+      "fromEp": 207,
+      "toEp": 325
+    },
+    {
+      "name": "Thriller Bark",
+      "order": 5,
+      "fromEp": 326,
+      "toEp": 384
+    },
+    {
+      "name": "Summit War",
+      "order": 6,
+      "fromEp": 385,
+      "toEp": 516
+    },
+    {
+      "name": "Fish-Man Island",
+      "order": 7,
+      "fromEp": 517,
+      "toEp": 574
+    },
+    {
+      "name": "Dressrosa",
+      "order": 8,
+      "fromEp": 575,
+      "toEp": 746
+    },
+    {
+      "name": "Whole Cake Island",
+      "order": 9,
+      "fromEp": 747,
+      "toEp": 889
+    },
+    {
+      "name": "Wano Country",
+      "order": 10,
+      "fromEp": 890,
+      "toEp": 1085
+    },
+    {
+      "name": "Final Saga",
+      "order": 11,
+      "fromEp": 1086,
+      "toEp": 1168
+    }
   ]
 }
