@@ -116,7 +116,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
             {isMobile && (
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: allDone ? "var(--green)" : "var(--text-3)", marginRight: 2 }}>{done}/{total}</span>
             )}
-            {!allDone ? (
+            {ep < arc.end ? (
               <button style={{ ...qBtn, color: "var(--green)", borderColor: "color-mix(in oklab, var(--green) 30%, transparent)" }}
                 onClick={(e) => { e.stopPropagation(); markUpTo(arc.end); }}
                 title="Mark entire arc as watched"
