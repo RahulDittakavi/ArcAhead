@@ -118,7 +118,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
             )}
             {!allDone ? (
               <button style={{ ...qBtn, color: "var(--green)", borderColor: "color-mix(in oklab, var(--green) 30%, transparent)" }}
-                onClick={(e) => { e.stopPropagation(); markRange(arc.start, arc.end, "watched"); }}
+                onClick={(e) => { e.stopPropagation(); markUpTo(arc.end); }}
                 title="Mark entire arc as watched"
               >
                 <Icon name="check-check" size={13} color="var(--green)" />
