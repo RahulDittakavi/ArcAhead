@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Card } from "../../components/primitives";
-import { SeaChart, LogPose, HypeMeter } from "../../components/viz";
-import { LockedPanel } from "../../components/LockedPanel";
+import { SeaChart, LogPose } from "../../components/viz";
 import { ProgressViz } from "../../components/journeyViz";
 import { useEpisode } from "../../lib/episode";
 import { useApi } from "../../lib/useApi";
@@ -23,7 +22,6 @@ export function Dashboard() {
   const { openArc, openChar, go } = useNav();
   const isMobile = useIsMobile();
   const { data: journey } = useApi(() => api.journey(ep), [ep]);
-  const { data: reactions } = useApi(() => api.reactions(ep), [ep]);
   const { data: chars } = useApi(() => api.characters(ep), [ep]);
   const { data: ms } = useApi(() => api.milestones(ep), [ep]);
 
@@ -202,21 +200,18 @@ export function Dashboard() {
                 </h3>
                 <span className="chip"><Icon name="shield" size={12} color="var(--green)" /> spoiler-free</span>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
-                <div style={{ borderRadius: "var(--r)", border: "1px solid var(--line)", padding: 20, background: "var(--surface-2)" }}>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: "1px", color: "var(--text-3)", marginBottom: 8 }}>UP NEXT</div>
-                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, marginBottom: 8 }}>{journey.next ? journey.next.island : "The edge of the map"}</div>
-                  <p style={{ fontSize: 13.5, color: "var(--text-2)", lineHeight: 1.55 }}>
-                    {journey.next?.summary ?? "You've reached the edge of what's aired. Drop anchor and rest up."}
-                  </p>
-                  {journey.next && (
-                    <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
-                      <span className="chip"><Icon name="clock" size={12} /> {journey.next.watch}</span>
-                      <span className="chip">Ep {journey.next.start}–{journey.next.end}</span>
-                    </div>
-                  )}
-                </div>
-                <LockedPanel title="What awaits ashore" hint="The events of this island stay in the fog. You'll see them when you make landfall." unlockEp={journey.next ? journey.next.start : ep} spoilerStyle="shield" />
+              <div style={{ borderRadius: "var(--r)", border: "1px solid var(--line)", padding: 20, background: "var(--surface-2)" }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: "1px", color: "var(--text-3)", marginBottom: 8 }}>UP NEXT</div>
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, marginBottom: 8 }}>{journey.next ? journey.next.island : "The edge of the map"}</div>
+                <p style={{ fontSize: 13.5, color: "var(--text-2)", lineHeight: 1.55 }}>
+                  {journey.next?.summary ?? "You've reached the edge of what's aired. Drop anchor and rest up."}
+                </p>
+                {journey.next && (
+                  <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
+                    <span className="chip"><Icon name="clock" size={12} /> {journey.next.watch}</span>
+                    <span className="chip">Ep {journey.next.start}–{journey.next.end}</span>
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -251,32 +246,6 @@ export function Dashboard() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <StreakCard streak={streak} ts={ts} pace={pace} nextEp={nextEp} onWatch={() => go("episodes")} />
-
-            <Card pad={24}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
-                <h3 style={{ fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
-                  <Icon name="activity" size={17} color="var(--orange-hi)" /> Crew hype
-                </h3>
-                <span style={{ fontSize: 12, color: "var(--text-3)" }}>this island</span>
-              </div>
-              <HypeMeter value={arc.hype} segments={20} height={14} />
-              <div style={{ borderTop: "1px solid var(--line)", margin: "18px 0 14px" }} />
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {(reactions ?? []).slice(0, 2).map((r, i) => (
-                  <div key={r.id} style={{ display: "flex", gap: 11 }}>
-                    <div style={{ width: 30, height: 30, borderRadius: 99, background: `oklch(0.5 0.12 ${i * 80 + 30})`, flexShrink: 0, display: "grid", placeItems: "center", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 13, color: "#fff" }}>
-                      {r.user[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 12, color: "var(--text-3)", marginBottom: 2 }}>
-                        <span style={{ color: "var(--text-2)", fontWeight: 600 }}>@{r.user}</span> · {r.ago}
-                      </div>
-                      <div style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.45 }}>{r.text}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
 
             <Card pad={24}>
               <h3 style={{ fontSize: 17, marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>

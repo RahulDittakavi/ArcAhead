@@ -9,7 +9,7 @@
    - static assets    → stale-while-revalidate (instant from cache, refreshed in
      the background).
    Bump CACHE to invalidate everything on the next deploy. */
-const CACHE = "arcahead-v4";
+const CACHE = "arcahead-v5";
 const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
