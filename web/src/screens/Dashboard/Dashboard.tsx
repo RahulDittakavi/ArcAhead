@@ -9,7 +9,7 @@ import { useApi } from "../../lib/useApi";
 import { api, fmtHours } from "../../lib/api";
 import { useNav } from "../../lib/nav";
 import { useIsMobile } from "../../lib/useIsMobile";
-import { computeStreak, pacePerWeek, countState } from "../../lib/stats";
+import { computeStreak, pacePerWeek, countState, watchedToday, lastNDaysActivity, bestStreak } from "../../lib/stats";
 import { useAuth } from "../../lib/auth";
 import { ShareModal } from "./ShareModal";
 
@@ -63,11 +63,6 @@ export function Dashboard() {
             </h1>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {streak > 0 ? (
-              <span className="chip"><Icon name="flame" size={13} color="var(--orange-hi)" /> {streak}-day streak</span>
-            ) : (
-              <span className="chip" onClick={() => go("episodes")} style={{ cursor: "pointer" }}><Icon name="flame" size={13} color="var(--text-3)" /> Start a streak</span>
-            )}
             <span className="chip"><Icon name="map-pin" size={13} color="var(--orange-hi)" /> {journey.doneCount} islands discovered</span>
             <button className="btn btn-sm btn-ghost" onClick={() => setShowShare(true)}>
               <Icon name="share-2" size={14} /> Share voyage
@@ -255,6 +250,8 @@ export function Dashboard() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <StreakCard streak={streak} ts={ts} pace={pace} nextEp={nextEp} onWatch={() => go("episodes")} />
+
             <Card pad={24}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
                 <h3 style={{ fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
@@ -318,6 +315,97 @@ export function Dashboard() {
         />
       )}
     </SeaChart>
+  );
+}
+
+function StreakCard({ streak, ts, pace, nextEp, onWatch }: {
+  streak: number;
+  ts: Record<number, number>;
+  pace: number;
+  nextEp: number | null;
+  onWatch: () => void;
+}) {
+  const now = Date.now();
+  const todayDone = watchedToday(ts, now);
+  const atRisk = streak > 0 && !todayDone;
+  const days = lastNDaysActivity(ts, 14, now);
+  const best = bestStreak(ts);
+
+  return (
+    <Card pad={24}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <h3 style={{ fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+          <Icon name="flame" size={17} color={streak > 0 ? "var(--orange-hi)" : "var(--text-3)"} /> Watch streak
+        </h3>
+        {atRisk && (
+          <span style={{ fontSize: 11, fontWeight: 600, color: "var(--orange-hi)", background: "var(--orange-faint)", border: "1px solid rgba(230,120,30,0.3)", borderRadius: 999, padding: "3px 10px" }}>
+            At risk
+          </span>
+        )}
+      </div>
+
+      {/* big number */}
+      <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 14 }}>
+        <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 52, lineHeight: 1, color: streak > 0 ? "var(--orange-hi)" : "var(--text-4)" }}>
+          {streak}
+        </span>
+        <span style={{ fontSize: 14, color: "var(--text-3)" }}>{streak === 1 ? "day" : "days"}</span>
+      </div>
+
+      {/* at-risk / zero state nudge */}
+      {atRisk && (
+        <div style={{ background: "var(--orange-faint)", border: "1px solid rgba(230,120,30,0.2)", borderRadius: 10, padding: "8px 12px", marginBottom: 14, fontSize: 12.5, color: "var(--orange-hi)", lineHeight: 1.45 }}>
+          Watch an episode today to keep your streak alive.
+        </div>
+      )}
+      {streak === 0 && (
+        <div style={{ fontSize: 13, color: "var(--text-3)", marginBottom: 14 }}>
+          Mark an episode watched today to start one.
+        </div>
+      )}
+
+      {/* 14-day activity grid */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 11, color: "var(--text-4)", marginBottom: 7 }}>Last 14 days</div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {days.map((d, i) => (
+            <div
+              key={i}
+              title={d.count > 0 ? `${d.count} ep${d.count !== 1 ? "s" : ""}` : "No watches"}
+              style={{
+                flex: 1,
+                height: 20,
+                borderRadius: 4,
+                background: d.count >= 3 ? "var(--orange-hi)"
+                  : d.count > 0 ? "var(--orange)"
+                  : d.isToday ? "rgba(230,120,30,0.12)"
+                  : "var(--surface-3)",
+                border: d.isToday ? "1.5px solid rgba(230,120,30,0.5)" : "1.5px solid transparent",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* secondary stats + CTA */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, borderTop: "1px solid var(--line)", paddingTop: 14 }}>
+        <div>
+          <div style={{ fontSize: 11, color: "var(--text-4)", marginBottom: 2 }}>Best</div>
+          <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text-2)" }}>{best}d</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 11, color: "var(--text-4)", marginBottom: 2 }}>Pace</div>
+          <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text-2)" }}>
+            {pace > 0 ? `${pace.toFixed(1)}/wk` : "—"}
+          </div>
+        </div>
+        {nextEp && (
+          <button onClick={onWatch} className="btn btn-sm btn-primary" style={{ marginLeft: "auto" }}>
+            <Icon name="play" size={13} /> EP {nextEp}
+          </button>
+        )}
+      </div>
+    </Card>
   );
 }
 

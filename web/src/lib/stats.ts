@@ -35,3 +35,47 @@ export function countState(states: Record<number, EpisodeState>, state: EpisodeS
   for (const v of Object.values(states)) if (v === state) n++;
   return n;
 }
+
+/** Whether today has any individual watch events (real-time marks only). */
+export function watchedToday(ts: Record<number, number>, now = Date.now()): boolean {
+  const today = dayKey(now);
+  return Object.values(ts).some((t) => dayKey(t) === today);
+}
+
+/** Last N calendar days, oldest→newest. Each entry has the episode count for that day. */
+export function lastNDaysActivity(
+  ts: Record<number, number>,
+  n: number,
+  now = Date.now(),
+): Array<{ count: number; isToday: boolean }> {
+  const counts: Record<string, number> = {};
+  for (const t of Object.values(ts)) {
+    const k = dayKey(t);
+    counts[k] = (counts[k] ?? 0) + 1;
+  }
+  const result: Array<{ count: number; isToday: boolean }> = [];
+  const d = new Date(now);
+  d.setHours(0, 0, 0, 0);
+  for (let i = n - 1; i >= 0; i--) {
+    const offset = new Date(d);
+    offset.setDate(d.getDate() - i);
+    const key = dayKey(offset.getTime());
+    result.push({ count: counts[key] ?? 0, isToday: i === 0 });
+  }
+  return result;
+}
+
+/** All-time longest consecutive-day watch streak. */
+export function bestStreak(ts: Record<number, number>): number {
+  const days = new Set(Object.values(ts).map(dayKey));
+  if (days.size === 0) return 0;
+  const sorted = [...days]
+    .map((k) => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m, d).getTime(); })
+    .sort((a, b) => a - b);
+  let best = 1, cur = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (Math.round((sorted[i] - sorted[i - 1]) / 86_400_000) === 1) best = Math.max(best, ++cur);
+    else cur = 1;
+  }
+  return best;
+}
