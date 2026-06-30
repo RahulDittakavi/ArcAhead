@@ -158,7 +158,7 @@ function ArcGroup({ arc, expanded, onToggle }: { arc: ArcDto; expanded: boolean;
       {expanded && (
         <div style={{ borderTop: "1px solid var(--line)" }}>
           <div style={{ display: "flex", gap: 8, padding: "10px 20px", borderBottom: "1px solid var(--line)", flexWrap: "wrap" }}>
-            <button className="btn btn-sm btn-ghost" onClick={() => markRange(arc.start, arc.end, "watched")}>
+            <button className="btn btn-sm btn-ghost" onClick={() => markUpTo(arc.end)}>
               <Icon name="check-check" size={14} /> Mark arc watched
             </button>
             <button className="btn btn-sm btn-ghost" onClick={() => markRange(arc.start, arc.end, "unwatched")}>
