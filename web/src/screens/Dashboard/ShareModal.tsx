@@ -21,6 +21,7 @@ export function ShareModal({ data, onClose }: ShareModalProps) {
   function download() {
     const canvas = canvasRef.current;
     if (!canvas || !ready) return;
+    (window as any).umami?.track("voyage_card_downloaded", { ep: data.ep });
     canvas.toBlob((blob) => {
       if (!blob) return;
       const url = URL.createObjectURL(blob);
@@ -40,6 +41,7 @@ export function ShareModal({ data, onClose }: ShareModalProps) {
       const file = new File([blob], `arcahead-ep${data.ep}.png`, { type: "image/png" });
       try {
         if (navigator.canShare?.({ files: [file] })) {
+          (window as any).umami?.track("voyage_card_shared", { ep: data.ep });
           await navigator.share({
             files: [file],
             title: "My ArcAhead Voyage",
@@ -54,6 +56,7 @@ export function ShareModal({ data, onClose }: ShareModalProps) {
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.origin).then(() => {
+      (window as any).umami?.track("share_link_copied");
       setCopied(true);
       setTimeout(() => setCopied(false), 2200);
     });
