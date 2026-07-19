@@ -2,7 +2,7 @@
   "series": {
     "id": "one-piece",
     "title": "One Piece",
-    "episodes": 1168,
+    "episodes": 1169,
     "year": 1999,
     "hue": 32,
     "tagline": "A grand voyage across an endless sea, in search of the ultimate treasure.",
@@ -73,7 +73,7 @@
       "name": "Final Saga",
       "order": 11,
       "fromEp": 1086,
-      "toEp": 1168
+      "toEp": 1169
     }
   ]
 }
